@@ -1,0 +1,25 @@
+  * { 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .hoja{
+    background: rgb(216, 216, 216);
+    height: 100vh;
+    /*IMPORTANTE*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .alerta{
+    background: white;
+    min-width: 65%;
+    width: 500px;
+    height: 40%;
+
+    padding: 3px 10px;
+    border: Black 5px solid;
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }

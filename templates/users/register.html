@@ -1,0 +1,89 @@
+{% extends './base/base.html' %}
+
+{% block titulo %}
+    REGISTER
+{% endblock %}
+
+{% block contenido %}
+    
+    <div class="container col-12 col-sm-9 col-md-6 col-lg-4">
+        <div class="row align-items-center justify-content-center">
+            <div class="col">
+
+                <form action="{{ url_for('registerPost') }}" method="POST" class="row g-3">
+                    <div class="mb-3 mt-3 text-center">
+                        <img src="{{ url_for('static', filename='images/user.png') }}" alt="img_usuario" width="110" height="110">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="name" class="form-label">Nombre de usuario<b style="color: red;">*</b></label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ name }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="last_name" class="form-label">Apellido de usuario</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ last_name }}">
+                    </div>
+
+                    <div class="col-12">
+                        <label for="user" class="form-label">Email<b style="color: red;">*</b></label>
+                        <div class="input-group">
+                            <div class="input-group-text">@</div>
+                            <input type="email" class="form-control" name="user" id="user" value="{{ user }}" placeholder="example@gmail.com">
+                        </div>
+                        <div id="validate_email" class="form-text">Email</div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="password" class="form-label">Password<b style="color: red;">*</b></label>
+                        <input type="password" class="form-control" name="password" id="password">
+                        <div id="cantidad" class="form-text">Debe contener minimo 8 digitos</div>
+                        <div id="caracteres" class="form-text">Almenos una mayuscula, un numero y un caracter especial</div>
+                    </div>
+
+                    {% if alerta == True %}
+                        <div class="alert alert-success d-flex align-items-center" role="alert"> 
+                            <div class="row">
+                                <div class="col-12">Su cuenta ha sido registrada con exito!</div>
+                                <div class="col-12">Debe dirigirse a su correo para su activación</div>
+                            </div> 
+                        </div>
+                    {% endif%}
+
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <div class="alert alert-danger d-flex align-items-center" role="alert"> 
+                                <div class="row">
+                                    {% for message in messages %}
+                                        <div class="col-12">{{ message }}</div>
+                                    {% endfor %}
+                                </div> 
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+
+                    <div class=" d-grid gap-2 col-6 mx-auto">
+                        <button type="submit" class="btn btn-success btn-lg">Registrarse</button>
+                    </div>
+
+                </form>
+
+                <div class="mb-3 text-center">
+                    <h2>o</h2>
+                </div>
+
+                <div class=" d-grid gap-2 col-6 mx-auto">
+                    <a href=" {{ url_for('login') }} " class="btn btn-primary btn-lg">Iniciar sesion</a>
+                </div>
+
+                <div class="mb-3"></div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='js/validate_password.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/validate_email.js') }}"></script>
+{% endblock %}
