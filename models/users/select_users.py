@@ -30,3 +30,11 @@ def GetUrlPassword(url_pass):
     usuario = cursor.fetchall()
     cursor.close()
     return usuario
+
+def GetProfileUser(id):
+    cursor = db.cursor(dictionary=True)
+    cursor.execute('SELECT * FROM usuarios WHERE id_usuario ="'+id+'" ')
+    usuario = cursor.fetchone()
+    cursor.close()
+    return usuario
+    

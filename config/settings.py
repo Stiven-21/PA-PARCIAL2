@@ -15,3 +15,6 @@ SMTP_USERNAME = os.environ.get("SMTP_USERNAME")
 SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD")
 
 URL_PAGE = os.environ.get("URL_PAGE")
+
+ROUTE_IMAGE = os.environ.get("ROUTE_IMAGE")
+ROUTE_IMAGE_DEFAULT = os.environ.get("ROUTE_IMAGE_DEFAULT")

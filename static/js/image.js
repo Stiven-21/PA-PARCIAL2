@@ -5,11 +5,20 @@ document.getElementById('file').onchange = function(e){
 
     document.getElementById('nombre').innerHTML = 'Nombre: '+nombre_archivo
     document.getElementById('tipo').innerHTML = 'Tipo: '+type
-
-    switch(type)
+    
+    switch(type.toLowerCase())
     {
+        case 'html':
+        case 'htm':
+            document.getElementById('vista_previa').src = "/static/images/types/html.jpg"
+            break;
+        case 'css':
+            document.getElementById('vista_previa').src = "/static/images/types/css.png"
+            break;
+        case 'js':
+            document.getElementById('vista_previa').src = "/static/images/types/js.jpg"
+            break;
         case 'pdf':
-        case 'PDF':
             document.getElementById('vista_previa').src = "/static/images/types/pdf.jpg"
             break;
 
@@ -47,7 +56,6 @@ document.getElementById('file').onchange = function(e){
         case 'tif':
         case 'bmp':
         case 'psd':
-        case 'gif':
         case 'raw':
             reader = new FileReader();
             reader.readAsDataURL(e.target.files[0]);
@@ -56,12 +64,26 @@ document.getElementById('file').onchange = function(e){
             }
             break;
 
+        case 'zip':
+        case 'rar':
+            document.getElementById('vista_previa').src = "/static/images/types/rar.jpg"
+            break;
+        
+        case 'mp4':
+        case 'mov':
+        case 'wmv':
+        case 'avi':
+        case 'avchd':
+        case 'mkv':
+        case 'gif':
+            document.getElementById('vista_previa').src = "/static/images/types/mp4.png"
+            break;
         case 'exe':
             document.getElementById('vista_previa').src = "/static/images/types/ejecutable.png"
             break;
 
         default:
-            document.getElementById('vista_previa').src = "/static/images/types/not-preview.png"
+            document.getElementById('vista_previa').src = "/static/images/types/no-image.jpg"
             break;
     }
 }

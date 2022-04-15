@@ -9,6 +9,8 @@ from controllers.user import form_password_controller
 from controllers.functions import get_id_usuario_controller
 from controllers.archives import create_archive_controller
 from controllers.validations import validations_controller
+from controllers.profile import get_profile_user_controller
+from controllers.profile import get_profile_archives_controller
 
 app = Flask(__name__)
 app.secret_key = 'fjifjidfjied5df45df485h48@'
@@ -81,8 +83,10 @@ def profile():
     logeado = True
     if not validations_controller.ControllerEstaIniciado():
         return redirect(url_for('login'))
-    #session.get('id_usuario')
-    return render_template("profile/perfil.html",logeado = logeado)
+    user = get_profile_user_controller.GetProfileUserController(str(session.get('id_usuario')))
+    archives = get_profile_archives_controller.GetProfileArchivesController(str(session.get('id_usuario')))
+    total_archives = get_profile_archives_controller.GetCantidadArchivesProfileController(str(session.get('id_usuario')))
+    return render_template("profile/perfil.html",logeado = logeado, user = user, archives = archives, total_archives = total_archives)
 
 #ACTIVATE ACCOUNT
 @app.get("/validar-cuenta/<urluser>/<token>")
@@ -161,9 +165,9 @@ def CreateArchivePost():
     
     if not create_archive_controller.ControllerCreateArchive(name_archive, archivo, access_archive):
         return render_template("archives/crear_archivo.html", name_archivo = name_archive, logeado = logeado)
-    create_archive_controller.ControllerSendArchive(name_archive, archivo, access_archive)
-    return render_template("profile/perfil.html",logeado = logeado)
-
+    
+    create_archive_controller.ControllerSendArchive(name_archive, str(session.get('id_usuario')), archivo, access_archive)
+    return redirect(url_for('profile'))
 
 
 app.run(debug=True)

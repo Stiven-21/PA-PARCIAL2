@@ -1,4 +1,7 @@
+import imp
 from flask import flash, session
+from datetime import datetime
+from config import settings
 import re
 
 def ControllerValidateMail(correo):
@@ -46,3 +49,51 @@ def ControllerLengthField(campo):
 
 def ControllerEstaIniciado():
     return True if 'id_usuario' in session else False
+
+def ControllerExtractTypeArchive(archive):
+    name_archive = archive.filename
+    name_archive = name_archive.split(".")
+    
+    tipo = name_archive[-1]
+    return tipo
+
+def ControllerSaveArchive(archive):
+    now = datetime.now()
+    name_archive = archive.filename
+    name_archive = name_archive.split(".")
+    
+    new_name = str(name_archive[0])+'-'+str(now.date())+'-'+str(now.hour)+'-'+str(now.minute)+'-'+str(now.second)+'-'+str(now.microsecond)+'.'+str(name_archive[-1])
+    archive.save(settings.ROUTE_IMAGE + archive.filename)
+    ruta_archivo = settings.ROUTE_IMAGE+archive.filename
+    return ruta_archivo
+
+def ControllerVistaArchive(ruta_save):
+    ruta = ruta_save.split(".")
+    type = ruta[-1].lower()
+    ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"no-image.jpg"
+
+    if type in ['html','htm']:
+        print("ES UN HTML")
+        ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"html.jpg"
+    if type == 'css':
+        ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"css.png"
+    if type == 'js':
+        ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"css.png"
+    if type == 'pdf':
+        ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"pdf.jpg"
+    if type  in ['docx','doc', 'docm', 'dotx']:
+        ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"word.jpg"
+    if type  in ['xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xlam']:
+        ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"excel.jpg"
+    if type  in ['pptx', 'pptm', 'potx', 'potm', 'ppam', 'ppsx', 'ppsm', 'sldx', 'sldm', 'thmx']:
+        ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"point.png"
+    if type  in ['jpg', 'png', 'tif', 'bmp', 'psd', 'raw']:
+        ruta_vista = ruta_save
+    if type  in ['rar', 'zip']:
+        ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"rar.jpg"
+    if type  in ['mp4', 'mov', 'wmv', 'avi', 'avchd', 'mkv', 'gif']:
+        ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"mp4.png"
+    if type == 'exe':
+        ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"ejecutable.png"
+    
+    return ruta_vista

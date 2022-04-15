@@ -1,6 +1,6 @@
 from flask import flash
-
 from controllers.validations import validations_controller
+from models.archives import insert_archives
 
 def ControllerCreateArchive(name, archive, access):
     isValid = True
@@ -17,10 +17,13 @@ def ControllerCreateArchive(name, archive, access):
             
     if isValid == False:
         return False
-    return False
+    return True
 
-def ControllerSendArchive(name, archive, acceess):
+def ControllerSendArchive(name, id_usuario, archive, access):
     if access is None:
         access = 'off'
-    
-    print("HORA DE SUBIR EL ACRIVO")
+    ruta_archivo = validations_controller.ControllerSaveArchive(archive)
+    ruta_vista = validations_controller.ControllerVistaArchive(ruta_archivo)
+    tipo = validations_controller.ControllerExtractTypeArchive(archive)
+
+    insert_archives.CreateArchive(name, id_usuario, ruta_archivo, ruta_vista, tipo, access)

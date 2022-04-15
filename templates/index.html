@@ -1,10 +1,17 @@
 {% extends 'base/base.html' %}
 
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/carga.css') }}">
+{% endblock %}
+
 {% block titulo %}
     INICIO
 {% endblock %}
 
 {% block contenido %}
+    <div id="contenedor_carga">
+        <div id="carga"></div>
+    </div>
     <h1>ESTE ES EL INDEX</h1>
 
 
@@ -22,4 +29,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='js/carga.js') }}"></script>
 {% endblock %}

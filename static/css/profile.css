@@ -1,0 +1,25 @@
+.name{
+    font-size: 15px;
+}
+.user{
+    font-size: 10px;
+}
+.total{
+    font-size: 12.5px;
+}
+.contener-imagen{
+    max-height: 170px;
+    text-align: center;
+}
+.imagen{
+    min-width: auto;
+    min-height: 170px;
+    max-width: auto;
+    max-height: 170px;
+}
+.contener-imagen img{
+    width: 98%;
+    height:98%;
+    top:0px;
+    left:0px;
+}
