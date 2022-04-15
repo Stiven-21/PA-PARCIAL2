@@ -1,3 +1,4 @@
+from ast import Delete
 from config.database import db
 
 def GetArchivesUser(id_usuario):
@@ -27,3 +28,17 @@ def GetCountArchivesUrl(url):
     cant_url = cursor.fetchone()
     cursor.close()
     return cant_url
+
+def GetArchiveDelete(id_archivo, id_usuario):
+    cursor = db.cursor(dictionary = True)
+    cursor.execute('SELECT COUNT(*) FROM archivos WHERE id_archivo="'+id_archivo+'" AND id_usuario="'+id_usuario+'"  ')
+    Delete = cursor.fetchone()
+    cursor.close()
+    return Delete
+
+def GetArchiveShare(url):
+    cursor = db.cursor(dictionary = True)
+    cursor.execute('SELECT * FROM archivos WHERE url_share="'+url+'" ')
+    share = cursor.fetchone()
+    cursor.close()
+    return share

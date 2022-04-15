@@ -9,6 +9,8 @@ from controllers.user import recuperate_account_controller
 from controllers.user import form_password_controller
 from controllers.functions import get_id_usuario_controller
 from controllers.archives import create_archive_controller
+from controllers.archives import delete_archive_controller
+from controllers.share import share_archive_controller
 from controllers.validations import validations_controller
 from controllers.profile import get_profile_user_controller
 from controllers.profile import get_profile_archives_controller
@@ -36,6 +38,9 @@ def login():
     logeado = True
     if not validations_controller.ControllerEstaIniciado():
         logeado = False
+    if logeado == True:
+        return redirect(url_for('profile'))
+        
     return render_template("users/login.html",logeado = logeado)
  
 @app.post("/login")
@@ -43,6 +48,9 @@ def loginPost():
     logeado = True
     if not validations_controller.ControllerEstaIniciado():
         logeado = False
+    if logeado == True:
+        return redirect(url_for('profile'))
+    
     user = request.form.get('user')
     password = request.form.get('password')
     
@@ -60,6 +68,8 @@ def register():
     logeado = True
     if not validations_controller.ControllerEstaIniciado():
         logeado = False
+    if logeado == True:
+        return redirect(url_for('profile'))
     return render_template("users/register.html",logeado = logeado)
 
 @app.post("/register")
@@ -67,6 +77,8 @@ def registerPost():
     logeado = True
     if not validations_controller.ControllerEstaIniciado():
         logeado = False
+    if logeado == True:
+        return redirect(url_for('profile'))
     name = request.form.get('name')
     last_name = request.form.get('last_name')
     user = request.form.get('user')
@@ -172,5 +184,37 @@ def CreateArchivePost():
     create_archive_controller.ControllerSendArchive(name_archive, str(session.get('id_usuario')), archivo, access_archive)
     return redirect(url_for('profile'))
 
+#EDITAR ARCHIVO
+@app.get("/Archivo/editar/<id>")
+def EditArchive(id):
+    return "EDITAR ARCHIVO"
+
+#ELIMINAR ARCHIVO
+@app.get("/archivo/borrar-archivo/<id>")
+def DeleteArchive(id):
+    logeado = True
+    if not validations_controller.ControllerEstaIniciado():
+        return redirect(url_for('login'))
+    id_usuario = str(session.get('id_usuario'))
+    if not delete_archive_controller.ControllerValidateArchiveDelete(id, id_usuario):
+        return render_template('errores/not_autorice_delete.html',logeado = logeado)
+        
+    delete_archive_controller.ControllerDeleteArchive(id, id_usuario)
+    return redirect(url_for('profile'))
+    
+#COMPARTIR
+@app.get("/archive/<url>")
+def Share(url):
+    logeado = True
+    if not validations_controller.ControllerEstaIniciado():
+        logeado = False
+    share = share_archive_controller.ControllerShareArchive(url)
+    if share is None:
+        return render_template('errores/archive_not_exist.html',logeado = logeado)
+    
+    if share['id_usuario'] != session.get('id_usuario'): 
+        if share['accesso'] == 'off':
+            return render_template('errores/not_autorice_url.html',logeado = logeado)
+    return render_template('archives/share.html',logeado = logeado, share = share)
 
 app.run(debug=True)

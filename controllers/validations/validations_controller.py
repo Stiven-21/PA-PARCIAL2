@@ -1,4 +1,4 @@
-import imp
+import os
 from flask import flash, session
 from datetime import datetime
 from config import settings
@@ -57,15 +57,30 @@ def ControllerExtractTypeArchive(archive):
     tipo = name_archive[-1]
     return tipo
 
+def ControllerExtractPesoArchive(ruta):
+    peso = convert_bytes(os.stat(ruta).st_size)
+    return peso
 
-def ControllerSaveArchive(archive):
+def convert_bytes(num):
+    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+        if num < 1024.0:
+            return "%3.1f %s" % (num, x)
+        num /= 1024.0
+
+
+def ControllerSaveArchive(name,archive):
     now = datetime.now()
     name_archive = archive.filename
     name_archive = name_archive.split(".")
     
-    new_name = str(name_archive[0])+'-'+str(now.date())+'-'+str(now.hour)+'-'+str(now.minute)+'-'+str(now.second)+'-'+str(now.microsecond)+'.'+str(name_archive[-1])
+    diret = '//\\.:; '
+    for cam in diret:
+        name = name.replace(cam, '-')
+    
+    new_name = str(name)+'-'+str(now.date())+'-'+str(now.hour)+'-'+str(now.minute)+'-'+str(now.second)+'-'+str(now.microsecond)+'.'+str(name_archive[-1])
     archive.save(settings.ROUTE_IMAGE + archive.filename)
-    ruta_archivo = settings.ROUTE_IMAGE+archive.filename
+    os.rename(settings.ROUTE_IMAGE + archive.filename, settings.ROUTE_IMAGE + new_name)
+    ruta_archivo = settings.ROUTE_IMAGE + new_name
     return ruta_archivo
 
 def ControllerVistaArchive(ruta_save):

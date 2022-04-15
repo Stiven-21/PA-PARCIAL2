@@ -1,0 +1,14 @@
+ion-icon {
+    padding-top: 4px;
+    font-size: 18px;
+    color: black;
+}
+
+.card{
+    min-height: 22rem;
+    width: 100%;
+}
+
+.col-card .card{
+    height: 100%;
+}

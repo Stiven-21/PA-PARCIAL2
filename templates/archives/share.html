@@ -1,0 +1,46 @@
+{% extends './base/base.html' %}
+
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/carga.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/share.css') }}">
+{% endblock %}
+
+{% block titulo %}
+    Share
+{% endblock %}
+
+{% block contenido %}
+    <div id="contenedor_carga">
+        <div id="carga"></div>
+    </div>
+    <div class="container col-12 col-sm-12 col-md-10 col-lg-10 col-xl-8">
+        <div class="row mt-3">
+            <div class="col-12 col-sm-4">
+                <div class="contener-imagen">
+                    <img src=".{{ share['ruta_vista'] }}" class="card-img-top imagen rounded" alt="...">
+                </div>
+            </div>
+            <div class="col-12 col-sm-8">
+                <div class="row">
+                    <div class="col-12 border-bottom">
+                        <div class="title"> {{ share['nombre_archivo'] }} </div> 
+                    </div>
+                    <div class="body-title">
+                        <div>Peso: {{ share['size'] }}</div>
+                        <div>Extencion: .{{ share['type'] }}</div>
+                        <div></div>
+                    </div>
+                    <div class="btn-title">
+                        <a href="" class="btn btn-primary btn-sm">
+                            <ion-icon name="arrow-down-outline"></ion-icon>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='js/carga.js') }}"></script>
+{% endblock %}

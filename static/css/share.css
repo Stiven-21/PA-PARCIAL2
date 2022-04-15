@@ -1,0 +1,36 @@
+.contener-imagen{
+    max-height: 25rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+.imagen{
+    min-height: 170px;
+    max-height: 24rem;
+}
+.contener-imagen img{
+    margin-top: 5%;
+    width: 98%;
+    height:98%;
+    top:0px;
+    left:0px;
+}
+.title{
+    text-align: start;
+    color: black;
+    margin-top: 5px;
+    margin-bottom: 1rem;
+    font-size: 30px;
+    font-family: 'Times New Roman', Times, serif;
+}
+.body-title{
+    margin-top: 1rem;
+    font-size: 15px;
+    margin-bottom: 1rem;
+}
+.btn-title{
+    text-align: start;
+}
+.btn-title .button{
+    padding: 20px 0;
+}
