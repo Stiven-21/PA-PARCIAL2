@@ -1,0 +1,17 @@
+.text-copy{
+    background: rgb(243, 243, 243);
+    border-bottom: 0,5px solid black;
+    border-top: 0,5px solid black;
+    height: 8px;
+    width: 100%;
+    overflow: hidden;
+
+    font-size: 5px;
+
+    display: hidden;
+    display: flex;
+    align-items: flex-start;
+
+    visibility: hidden;
+    opacity: 0;
+}

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, url_for
+from config import settings
 from models.users import select_users
 
 from controllers.user import login_controller
@@ -11,6 +12,7 @@ from controllers.archives import create_archive_controller
 from controllers.validations import validations_controller
 from controllers.profile import get_profile_user_controller
 from controllers.profile import get_profile_archives_controller
+from controllers.index import archives_index_controller
 
 app = Flask(__name__)
 app.secret_key = 'fjifjidfjied5df45df485h48@'
@@ -20,7 +22,8 @@ def index():
     logeado = True
     if not validations_controller.ControllerEstaIniciado():
         logeado = False
-    return render_template("index.html", logeado = logeado)
+    archives = archives_index_controller.ControllerArchiveIndex()
+    return render_template("index.html", logeado = logeado, archives = archives, link = settings.URL_PAGE)
 
 @app.get("/logout")
 def logout():
@@ -86,7 +89,7 @@ def profile():
     user = get_profile_user_controller.GetProfileUserController(str(session.get('id_usuario')))
     archives = get_profile_archives_controller.GetProfileArchivesController(str(session.get('id_usuario')))
     total_archives = get_profile_archives_controller.GetCantidadArchivesProfileController(str(session.get('id_usuario')))
-    return render_template("profile/perfil.html",logeado = logeado, user = user, archives = archives, total_archives = total_archives)
+    return render_template("profile/perfil.html",logeado = logeado, user = user, archives = archives, total_archives = total_archives, link = settings.URL_PAGE)
 
 #ACTIVATE ACCOUNT
 @app.get("/validar-cuenta/<urluser>/<token>")

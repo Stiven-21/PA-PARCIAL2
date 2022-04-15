@@ -1,6 +1,9 @@
 from flask import flash
 from controllers.validations import validations_controller
+from controllers.archives import Count_Url_Archive_Controller
 from models.archives import insert_archives
+import random
+import string
 
 def ControllerCreateArchive(name, archive, access):
     isValid = True
@@ -22,8 +25,13 @@ def ControllerCreateArchive(name, archive, access):
 def ControllerSendArchive(name, id_usuario, archive, access):
     if access is None:
         access = 'off'
+    
     ruta_archivo = validations_controller.ControllerSaveArchive(archive)
     ruta_vista = validations_controller.ControllerVistaArchive(ruta_archivo)
     tipo = validations_controller.ControllerExtractTypeArchive(archive)
-
-    insert_archives.CreateArchive(name, id_usuario, ruta_archivo, ruta_vista, tipo, access)
+    url_share =  (''.join(random.choice(string.ascii_letters + string.digits) for _ in range(90)))
+    
+    while Count_Url_Archive_Controller.ControllerCountUrlArchive(url_share) == True:
+        url_share =  (''.join(random.choice(string.ascii_letters + string.digits) for _ in range(90)))
+    
+    insert_archives.CreateArchive(name, id_usuario, ruta_archivo, ruta_vista, tipo, access, url_share)

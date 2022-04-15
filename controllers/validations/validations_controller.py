@@ -57,6 +57,7 @@ def ControllerExtractTypeArchive(archive):
     tipo = name_archive[-1]
     return tipo
 
+
 def ControllerSaveArchive(archive):
     now = datetime.now()
     name_archive = archive.filename
