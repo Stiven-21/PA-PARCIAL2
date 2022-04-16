@@ -284,6 +284,6 @@ def Share(url):
     if share['id_usuario'] != session.get('id_usuario'): 
         if share['accesso'] == 'off':
             return render_template('errores/not_autorice_url.html',logeado = logeado)
-    return render_template('archives/share.html',logeado = logeado, share = share, )
+    return render_template('archives/share.html',logeado = logeado, share = share, link = settings.URL_PAGE)
 
 app.run(debug=True)
