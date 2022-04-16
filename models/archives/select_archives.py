@@ -36,6 +36,13 @@ def GetArchiveDelete(id_archivo, id_usuario):
     cursor.close()
     return Delete
 
+def GetArchiveEditar(id_archivo, id_usuario):
+    cursor = db.cursor(dictionary = True)
+    cursor.execute('SELECT * FROM archivos WHERE id_archivo="'+id_archivo+'" AND id_usuario="'+id_usuario+'"  ')
+    editar = cursor.fetchone()
+    cursor.close()
+    return editar
+
 def GetArchiveShare(url):
     cursor = db.cursor(dictionary = True)
     cursor.execute('SELECT * FROM archivos WHERE url_share="'+url+'" ')

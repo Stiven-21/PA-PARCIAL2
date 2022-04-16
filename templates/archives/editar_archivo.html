@@ -1,18 +1,25 @@
 {% extends './base/base.html' %}
 
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/carga.css') }}">
+{% endblock %}
+
 {% block titulo %}
     LOGIN
 {% endblock %}
 
 {% block contenido %}
+    <div id="contenedor_carga">
+        <div id="carga"></div>
+    </div>
     <div class="container col-12 col-sm-12 col-md-10 col-lg-10 col-xl-8">
         <div class="row justify-content-center">
             <div class="col">
-                <form action="{{ url_for('CreateArchivePost') }}" enctype="multipart/form-data" method="POST">
+                <form action="" enctype="multipart/form-data" method="POST">
                     <div class="row align-items-center">
                         <div class="col-12">
                             <div class="mb-3 mt-3 text-center">
-                                <h2>CREAR ARCHIVO</h2>
+                                <h2>EDITAR ARCHIVO</h2>
                             </div>
                         </div>
                         <div class="col-12 col-sm-6">
@@ -29,12 +36,12 @@
                         <div class="col">
                             <div class="row mb-3">
                                 <div class="col-12 col-md-6 text-center">
-                                    <img class="rounded" src="{{ url_for('static', filename='images/types/not-preview.png') }}" id="vista_previa" width="160px" height="160px">
+                                    <img class="rounded" src="{{ img }}" id="vista_previa" width="160px" height="160px">
                                 </div>
                                 <div class="col text-break">
                                     <small>
-                                        <div id="nombre" class="fw-normal">Nombre:</div></small>
-                                        <div id="tipo" class="fw-normal">Tipo:</div>
+                                        <div id="nombre" class="fw-normal">Nombre: {{ name_select }}</div></small>
+                                        <div id="tipo" class="fw-normal">Tipo: {{ peso }}</div>
                                     </small>
                                 </div>
                             </div>
@@ -42,7 +49,12 @@
                     </div>
 
                     <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" role="switch" name="access" id="access">
+                        {% if access == 'off' %}
+                            <input class="form-check-input" type="checkbox" role="switch" name="access" id="access">
+                        {% endif %}
+                        {% if access == 'on' %}
+                            <input class="form-check-input" type="checkbox" role="switch" name="access" id="access" checked>
+                        {% endif %}
                         <label class="form-check-label" for="acess">
                             Acceso público
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path d="M10.97 8.265a1.45 1.45 0 00-.487.57.75.75 0 01-1.341-.67c.2-.402.513-.826.997-1.148C10.627 6.69 11.244 6.5 12 6.5c.658 0 1.369.195 1.934.619a2.45 2.45 0 011.004 2.006c0 1.033-.513 1.72-1.027 2.215-.19.183-.399.358-.579.508l-.147.123a4.329 4.329 0 00-.435.409v1.37a.75.75 0 11-1.5 0v-1.473c0-.237.067-.504.247-.736.22-.28.486-.517.718-.714l.183-.153.001-.001c.172-.143.324-.27.47-.412.368-.355.569-.676.569-1.136a.953.953 0 00-.404-.806C12.766 8.118 12.384 8 12 8c-.494 0-.814.121-1.03.265zM13 17a1 1 0 11-2 0 1 1 0 012 0z"></path><path fill-rule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z"></path></svg>
@@ -63,7 +75,7 @@
                     {% endwith %}
 
                     <div class=" d-grid gap-2 col-6 mx-auto">
-                        <button type="submit" class="btn btn-success btn-lg">Subir</button>
+                        <button type="submit" class="btn btn-success btn-lg">Actualizar</button>
                     </div>
                   </form>
 
@@ -75,4 +87,5 @@
 
 {% block javascript %}
     <script src="{{ url_for('static', filename='js/image.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/carga.js') }}"></script>
 {% endblock %}

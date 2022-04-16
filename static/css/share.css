@@ -34,3 +34,9 @@
 .btn-title .button{
     padding: 20px 0;
 }
+.text-url{
+    overflow: hidden;
+    font-size: 0px;
+    visibility: hidden;
+    opacity: 0;
+}

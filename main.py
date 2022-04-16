@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from os import access
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 from config import settings
 from models.users import select_users
 
@@ -10,6 +11,7 @@ from controllers.user import form_password_controller
 from controllers.functions import get_id_usuario_controller
 from controllers.archives import create_archive_controller
 from controllers.archives import delete_archive_controller
+from controllers.archives import edit_archive_controller
 from controllers.share import share_archive_controller
 from controllers.validations import validations_controller
 from controllers.profile import get_profile_user_controller
@@ -167,7 +169,8 @@ def CreateArchive():
     logeado = True
     if not validations_controller.ControllerEstaIniciado():
         return redirect(url_for('login'))
-    return render_template("archives/crear_archivo.html", logeado = logeado)
+    access = 'off'
+    return render_template("archives/crear_archivo.html", logeado = logeado, access = access)
 
 @app.post("/crear-archivo")
 def CreateArchivePost():
@@ -179,15 +182,77 @@ def CreateArchivePost():
     access_archive = request.form.get("access")
     
     if not create_archive_controller.ControllerCreateArchive(name_archive, archivo, access_archive):
-        return render_template("archives/crear_archivo.html", name_archivo = name_archive, logeado = logeado)
+        access = validations_controller.ControllerAccess(access_archive)
+        return render_template("archives/crear_archivo.html", name_archivo = name_archive, logeado = logeado, access = access)
     
     create_archive_controller.ControllerSendArchive(name_archive, str(session.get('id_usuario')), archivo, access_archive)
     return redirect(url_for('profile'))
 
 #EDITAR ARCHIVO
-@app.get("/Archivo/editar/<id>")
+@app.get("/archivo/editar/<id>")
 def EditArchive(id):
-    return "EDITAR ARCHIVO"
+    logeado = True
+    if not validations_controller.ControllerEstaIniciado():
+        return redirect(url_for('login'))
+    
+    id_usuario = str(session.get('id_usuario'))
+    if not delete_archive_controller.ControllerValidateArchiveDelete(id, id_usuario):
+        return render_template('errores/not_autorice_delete.html',logeado = logeado)
+    edit = edit_archive_controller.ControllerArchiveEdit(id, id_usuario)
+    
+    name_archivo = edit['nombre_archivo']
+    ruta = edit['ruta_vista']
+    ruta = ruta.split(".")
+    img = ruta[1]+"."+ruta[2]
+    ruta = edit['ruta_archivo']
+    ruta = ruta.split("/")
+    name_select = ruta[-1]
+    peso = edit['size']
+    access = edit['accesso']
+    
+    return render_template("archives/editar_archivo.html", logeado = logeado, name_archivo = name_archivo, img = img, name_select = name_select, peso = peso, access = access)
+
+@app.post("/archivo/editar/<id>")
+def EditArchivePost(id):
+    logeado = True
+    if not validations_controller.ControllerEstaIniciado():
+        return redirect(url_for('login'))
+    id_usuario = str(session.get('id_usuario'))
+    if not delete_archive_controller.ControllerValidateArchiveDelete(id, id_usuario):
+        return render_template('errores/not_autorice_delete.html',logeado = logeado)
+    name_archive = request.form.get("name_archivo")
+    archivo = request.files['file']
+    access_archive = request.form.get("access")
+    
+    edit = edit_archive_controller.ControllerArchiveEdit(id, id_usuario)
+    if(archivo.filename == ""):
+        ruta = edit['ruta_vista']
+        ruta = ruta.split(".")
+        img = ruta[1]+"."+ruta[2]
+        ruta = edit['ruta_archivo']
+        ruta = ruta.split("/")
+        name_select = ruta[-1]
+        peso = edit['size']
+    else:
+        flash('Si presiona a guardar sin seleccionar un archivo, se conservara el archivo anterior a la editacion')
+        img = "/static/images/types/no-image.jpg"
+        name_select = 'no definido'
+        peso = 'no definido'
+    
+    if not validations_controller.ControllerValidateEmpty(name_archive):
+        flash("No se permite el campo nombre vacio")
+        access = validations_controller.ControllerAccess(access_archive)
+        return render_template("archives/editar_archivo.html", logeado = logeado, name_archivo = name_archive, img = img, name_select = name_select, peso = peso, access = access)
+    if(archivo.filename == ""):
+        access = validations_controller.ControllerAccess(access_archive)
+        if access != edit['accesso']:
+            edit_archive_controller.ControllerEditAccessArchiveEdit(access, id)
+        edit_archive_controller.ControllerEditNameArchiveEdit(name_archive, id)
+    else:
+        access = validations_controller.ControllerAccess(access_archive)
+        edit_archive_controller.ControllerEditAllArchiveEdit(name_archive, archivo, access, id)
+    session.pop('_flashes', None)
+    return redirect(url_for('profile'))
 
 #ELIMINAR ARCHIVO
 @app.get("/archivo/borrar-archivo/<id>")
@@ -215,6 +280,6 @@ def Share(url):
     if share['id_usuario'] != session.get('id_usuario'): 
         if share['accesso'] == 'off':
             return render_template('errores/not_autorice_url.html',logeado = logeado)
-    return render_template('archives/share.html',logeado = logeado, share = share)
+    return render_template('archives/share.html',logeado = logeado, share = share, link = settings.URL_PAGE)
 
 app.run(debug=True)

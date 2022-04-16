@@ -62,15 +62,14 @@
                                             <div>Peso: {{ archivo['size'] }}</div>
                                             <div>Tipo: .{{ archivo['type'] }}</div>
                                         </p>
-                                        <div class="text-copy mb-1" id="text-copy">{{ link+"/archive/"+archivo['url_share'] }}</div>
                                         <div class="d-flex justify-content-evenly align-items-end">
                                             <div>
-                                                <button id="portapapeles" class="btn btn-secondary btn-sm">
-                                                    <ion-icon name="copy-outline"></ion-icon>
-                                                </button>
+                                                <a href="/archive/{{ archivo['url_share'] }}" class="btn btn-success btn-sm">
+                                                    <ion-icon name="eye-outline"></ion-icon>
+                                                </a>
                                             </div>
                                             <div>
-                                                <a href="" class="btn btn-primary btn-sm">
+                                                <a href="/archivo/editar/{{ archivo['id_archivo'] }}" class="btn btn-primary btn-sm">
                                                     <ion-icon name="create-outline"></ion-icon>
                                                 </a>
                                             </div>
@@ -94,5 +93,4 @@
 
 {% block javascript %}
     <script src="{{ url_for('static', filename='js/carga.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/copiar-portapapeles.js') }}"></script>
 {% endblock %}

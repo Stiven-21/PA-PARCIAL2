@@ -28,12 +28,15 @@
                     <div class="body-title">
                         <div>Peso: {{ share['size'] }}</div>
                         <div>Extencion: .{{ share['type'] }}</div>
-                        <div></div>
+                        <div class="text-url" id="text-copy">{{ link+"/archive/"+share['url_share'] }}</div>
                     </div>
                     <div class="btn-title">
                         <a href="" class="btn btn-primary btn-sm">
                             <ion-icon name="arrow-down-outline"></ion-icon>
                         </a>
+                        <button id="portapapeles" onclick="copiar()" class="btn btn-secondary btn-sm">
+                            <ion-icon name="copy-outline"></ion-icon>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -43,4 +46,5 @@
 
 {% block javascript %}
     <script src="{{ url_for('static', filename='js/carga.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/copiar-portapapeles.js') }}"></script>
 {% endblock %}

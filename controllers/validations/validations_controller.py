@@ -14,6 +14,11 @@ def ControllerArchiveEmpty(archivo):
         return False   
     return True
 
+def ControllerAccess(access):
+    if access is None:
+        return 'off'
+    return 'on'
+    
 def ControllerValidateEmpty(campo):
     if campo == "":
         return False
