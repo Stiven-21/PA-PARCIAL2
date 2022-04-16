@@ -121,6 +121,8 @@ def recuperar():
     logeado = True
     if not validations_controller.ControllerEstaIniciado():
         logeado = False
+    if logeado == True:
+        return redirect(url_for('profile'))
     return render_template("users/recuperate_account.html", logeado = logeado)
 
 @app.post("/recuperar-cuenta")
@@ -128,6 +130,8 @@ def recuperarPost():
     logeado = True
     if not validations_controller.ControllerEstaIniciado():
         logeado = False
+    if logeado == True:
+        return redirect(url_for('profile'))
     user = request.form.get('user')
     alerta = False
     
@@ -280,6 +284,6 @@ def Share(url):
     if share['id_usuario'] != session.get('id_usuario'): 
         if share['accesso'] == 'off':
             return render_template('errores/not_autorice_url.html',logeado = logeado)
-    return render_template('archives/share.html',logeado = logeado, share = share, link = settings.URL_PAGE)
+    return render_template('archives/share.html',logeado = logeado, share = share, )
 
 app.run(debug=True)
