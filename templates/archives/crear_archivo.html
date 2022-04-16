@@ -1,10 +1,18 @@
 {% extends './base/base.html' %}
 
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/carga.css') }}">
+{% endblock %}
+
 {% block titulo %}
     LOGIN
 {% endblock %}
 
 {% block contenido %}
+    <div id="contenedor_carga">
+        <div id="carga"></div>
+    </div>
+
     <div class="container col-12 col-sm-12 col-md-10 col-lg-10 col-xl-8">
         <div class="row justify-content-center">
             <div class="col">
@@ -68,7 +76,7 @@
                     {% endwith %}
 
                     <div class=" d-grid gap-2 col-6 mx-auto">
-                        <button type="submit" class="btn btn-success btn-lg">Subir</button>
+                        <button type="submit" id="funsubir" class="btn btn-success btn-lg">Subir</button>
                     </div>
                   </form>
 
@@ -79,5 +87,6 @@
 {% endblock %}
 
 {% block javascript %}
+    <script src="{{ url_for('static', filename='js/carga.js') }}"></script>
     <script src="{{ url_for('static', filename='js/image.js') }}"></script>
 {% endblock %}

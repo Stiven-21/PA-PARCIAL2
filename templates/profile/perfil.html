@@ -74,7 +74,7 @@
                                                 </a>
                                             </div>
                                             <div>
-                                                <a href="/archivo/borrar-archivo/{{ archivo['id_archivo'] }}" class="btn btn-danger btn-sm">
+                                                <a href="/archivo/borrar-archivo/{{ archivo['id_archivo'] }}" class="btn btn-danger btn-sm btn-delete">
                                                     <ion-icon name="trash-outline"></ion-icon>
                                                 </a>
                                             </div>
@@ -93,4 +93,5 @@
 
 {% block javascript %}
     <script src="{{ url_for('static', filename='js/carga.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/alert-delete.js') }}"></script>
 {% endblock %}

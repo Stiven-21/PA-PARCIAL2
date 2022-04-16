@@ -253,8 +253,9 @@ def EditArchivePost(id):
             edit_archive_controller.ControllerEditAccessArchiveEdit(access, id)
         edit_archive_controller.ControllerEditNameArchiveEdit(name_archive, id)
     else:
+        delete_archive = edit['ruta_archivo']
         access = validations_controller.ControllerAccess(access_archive)
-        edit_archive_controller.ControllerEditAllArchiveEdit(name_archive, archivo, access, id)
+        edit_archive_controller.ControllerEditAllArchiveEdit(name_archive, delete_archive, archivo, access, id)
     session.pop('_flashes', None)
     return redirect(url_for('profile'))
 
@@ -268,7 +269,9 @@ def DeleteArchive(id):
     if not delete_archive_controller.ControllerValidateArchiveDelete(id, id_usuario):
         return render_template('errores/not_autorice_delete.html',logeado = logeado)
         
-    delete_archive_controller.ControllerDeleteArchive(id, id_usuario)
+    edit = edit_archive_controller.ControllerArchiveEdit(id, id_usuario)
+    delete_archive = edit['ruta_archivo']
+    delete_archive_controller.ControllerDeleteArchive(id, id_usuario, delete_archive)
     return redirect(url_for('profile'))
     
 #COMPARTIR
