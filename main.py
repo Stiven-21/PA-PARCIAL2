@@ -1,5 +1,4 @@
-from os import access
-from flask import Flask, render_template, request, redirect, session, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory
 from config import settings
 from models.users import select_users
 
@@ -12,6 +11,7 @@ from controllers.functions import get_id_usuario_controller
 from controllers.archives import create_archive_controller
 from controllers.archives import delete_archive_controller
 from controllers.archives import edit_archive_controller
+from controllers.archives import get_archive_download
 from controllers.share import share_archive_controller
 from controllers.validations import validations_controller
 from controllers.profile import get_profile_user_controller
@@ -292,5 +292,17 @@ def Share(url):
             return render_template('errores/not_autorice_url.html',logeado = logeado)
     return render_template('archives/share.html',logeado = logeado, share = share, link = settings.URL_PAGE)
 
+#Descargar
+@app.get("/download/<id>")
+def download(id):
+    logeado = True
+    if not validations_controller.ControllerEstaIniciado():
+        logeado = False
+    if not delete_archive_controller.ControllerValidateArchiveDelete(id, str(session.get('id_usuario'))):
+        return render_template('errores/not_autorice_delete.html',logeado = logeado)
+    
+    archive = get_archive_download.GetArchiveDownload(id)
+    download = archive['ruta_archivo']
+    return send_from_directory(settings.ROUTE_IMAGE, path=download, as_attachment = True)
 
 app.run(debug=True)

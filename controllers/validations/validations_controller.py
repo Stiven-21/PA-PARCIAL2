@@ -63,7 +63,7 @@ def ControllerExtractTypeArchive(archive):
     return tipo
 
 def ControllerExtractPesoArchive(ruta):
-    peso = convert_bytes(os.stat(ruta).st_size)
+    peso = convert_bytes(os.stat(settings.ROUTE_IMAGE+ruta).st_size)
     return peso
 
 def convert_bytes(num):
@@ -85,7 +85,7 @@ def ControllerSaveArchive(name,archive):
     new_name = str(name)+'-'+str(now.date())+'-'+str(now.hour)+'-'+str(now.minute)+'-'+str(now.second)+'-'+str(now.microsecond)+'.'+str(name_archive[-1])
     archive.save(settings.ROUTE_IMAGE + archive.filename)
     os.rename(settings.ROUTE_IMAGE + archive.filename, settings.ROUTE_IMAGE + new_name)
-    ruta_archivo = settings.ROUTE_IMAGE + new_name
+    ruta_archivo =  new_name
     return ruta_archivo
 
 def ControllerVistaArchive(ruta_save):
@@ -109,7 +109,7 @@ def ControllerVistaArchive(ruta_save):
     if type  in ['pptx', 'pptm', 'potx', 'potm', 'ppam', 'ppsx', 'ppsm', 'sldx', 'sldm', 'thmx']:
         ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"point.png"
     if type  in ['jpg', 'png', 'tif', 'bmp', 'psd', 'raw']:
-        ruta_vista = ruta_save
+        ruta_vista = settings.ROUTE_IMAGE + ruta_save
     if type  in ['rar', 'zip']:
         ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"rar.jpg"
     if type  in ['mp4', 'mov', 'wmv', 'avi', 'avchd', 'mkv', 'gif']:

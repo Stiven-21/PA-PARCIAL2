@@ -1,5 +1,6 @@
 from models.archives import select_archives
 from models.archives import update_archives
+from config import settings
 from controllers.validations import validations_controller
 import os
 
@@ -13,7 +14,7 @@ def ControllerEditNameArchiveEdit(name_archive, id_archive):
     update_archives.UpdateNameArchive(name_archive, id_archive)
     
 def ControllerEditAllArchiveEdit(name, delete_archive, archive, acceso, id_archivo):
-    os.remove(delete_archive)
+    os.remove(settings.ROUTE_IMAGE+delete_archive)
     ruta_archivo = validations_controller.ControllerSaveArchive(name, archive)
     ruta_vista = validations_controller.ControllerVistaArchive(ruta_archivo)
     tipo = validations_controller.ControllerExtractTypeArchive(archive)

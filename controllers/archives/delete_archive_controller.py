@@ -1,5 +1,6 @@
 from models.archives import select_archives
 from models.archives import delete_archive
+from config import settings
 import os
 
 def ControllerValidateArchiveDelete(id_archivo, id_usuario):
@@ -9,6 +10,6 @@ def ControllerValidateArchiveDelete(id_archivo, id_usuario):
     return True
 
 def ControllerDeleteArchive(id_archivo, id_usuario, delete):
-    os.remove(delete)
+    os.remove(settings.ROUTE_IMAGE+delete)
     delete_archive.DeleteArchiveUser(id_archivo, id_usuario)
     

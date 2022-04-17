@@ -49,3 +49,10 @@ def GetArchiveShare(url):
     share = cursor.fetchone()
     cursor.close()
     return share
+
+def GetArchiveDownload(id):
+    cursor = db.cursor(dictionary = True)
+    cursor.execute('SELECT * FROM archivos WHERE id_archivo="'+id+'" ')
+    share = cursor.fetchone()
+    cursor.close()
+    return share
