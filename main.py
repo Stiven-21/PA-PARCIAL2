@@ -305,4 +305,4 @@ def download(id):
     download = archive['ruta_archivo']
     return send_from_directory(settings.ROUTE_IMAGE, path=download, as_attachment = True)
 
-app.run(debug=True)
+#app.run(debug=True)
