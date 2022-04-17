@@ -1,0 +1,12 @@
+body{
+    background: #000000;
+    background: -webkit-linear-gradient(to bottom   , #434343, #000000);
+    background: linear-gradient(to bottom   , #434343, #000000); 
+}
+.circle-image{
+    background: black;
+    border: 2px solid black;
+    border-radius: 100%;
+    width: 100px;
+    height: 100px;
+}

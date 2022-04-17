@@ -3,7 +3,6 @@
 {% block estilos %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/carga.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/text-copy.css') }}">
 {% endblock %}
 {% block titulo %}
     PROFILE
@@ -14,20 +13,25 @@
         <div id="carga"></div>
     </div>
 
-    <div class="container col-12 col-md-10 col-xl-9">
+    <div class="container col-12 col-md-10 col-xl-9 page">
         <div class="row">
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-3 user-page">
                 <div class="row align-items-center">
                     <div class="col-6 col-md-12">
                         <div class="text-center mb-3 mt-3">
-                            <img src="{{ url_for('static', filename='images/user.png') }}" alt="img_usuario" width="110" height="110">
+                            <img src="{{ url_for('static', filename='images/user.png') }}" class="circle-image" alt="img_usuario">
                         </div>
                     </div>
                     <div class="col">
                         <div class="text-start mb-3 mt-3">
-                            <div class="name mb-1">{{ user['nombre_usuario'] }} {{ user['apellido_usuario'] }}</div>
-                            <div class="user mb-1">{{ user['user'] }}</div>
-                            <div class="total ">Archivos: {{ total_archives['COUNT(*)'] }}</div>
+                            <div class="text-info-container">Usuario:</div>
+                            <div class="text-container text-user"> {{ user['nombre_usuario'] }} {{ user['apellido_usuario'] }} </div>
+                            
+                            <div class="text-info-container">Email:</div>
+                            <div class="text-container text-email"> {{ user['user'] }} </div>
+                            
+                            <div class="text-info-container">Archivos subidos:</div>
+                            <div class="text-container text-user"> {{ total_archives['COUNT(*)'] }} </div>
                         </div>
                         <div class="text-center">
                             <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar sesion</a>
@@ -36,10 +40,10 @@
                 </div>
 
             </div>
-            <div class="col">
-                <div class="text-center h2 mb-3 mt-3">
-                    MIS ARCHIVOS
-                    <div class="text-end float-end">
+            <div class="col body-page ver-min">
+                <div class="row title-page align-item-center">
+                    <div class="col-8 col-sm-10 h2 text-center">MIS ARCHIVOS</div>
+                    <div class="col-4 col-sm-2 text-end">
                         <a href="{{ url_for('CreateArchive') }}" class="btn btn-primary">Nuevo</a>
                     </div>
                 </div>
@@ -49,7 +53,7 @@
                     </div>
                 {%endif%}
                 {%if total_archives['COUNT(*)'] !=0 %}
-                    <div class="row">
+                    <div class="row mt-3">
                         {% for archivo in archives %}
                             <div class="col-6 col-md-4 col-xl-3 mb-3 col-card">
                                 <div class="card shadow-sm">

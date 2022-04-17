@@ -1,43 +1,51 @@
 {% extends './base/base.html' %}
 
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/body.css') }}">
+{% endblock %}
+
 {% block titulo %}
     REGISTER
 {% endblock %}
 
 {% block contenido %}
-    
     <div class="container col-12 col-sm-9 col-md-6 col-lg-4">
-        <div class="row align-items-center justify-content-center">
+        <div class="row align-items-center justify-content-center mtop">
             <div class="col">
-
-                <form action="{{ url_for('registerPost') }}" method="POST" class="row g-3">
-                    <div class="mb-3 mt-3 text-center">
-                        <img src="{{ url_for('static', filename='images/user.png') }}" alt="img_usuario" width="110" height="110">
+                <form action="{{ url_for('registerPost') }}" method="POST">
+                    <div class="mb-2 mt-1 text-center">
+                        <img src="{{ url_for('static', filename='images/user.png') }}" class="circle-image" alt="img_usuario" >
                     </div>
 
-                    <div class="col-md-6">
-                        <label for="name" class="form-label">Nombre de usuario<b style="color: red;">*</b></label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ name }}">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="last_name" class="form-label">Apellido de usuario</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ last_name }}">
-                    </div>
-
-                    <div class="col-12">
-                        <label for="user" class="form-label">Email<b style="color: red;">*</b></label>
-                        <div class="input-group">
-                            <div class="input-group-text">@</div>
-                            <input type="email" class="form-control" name="user" id="user" value="{{ user }}" placeholder="example@gmail.com">
+                    <div class="mb-2 text-end">
+                        <div class="text-info-user">
+                            You have an account <a href="{{ url_for('login') }}" class="link-sin">sign in</a>
                         </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <input type="text" class="input-text" placeholder="Name *" id="name" name="name" value="{{ name }}">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="input-text" placeholder="Last name" id="last_name" name="last_name" value="{{ last_name }}">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <input type="email" class="input-text" placeholder="example@gmail.com" name="user" id="user" value="{{ user }}">
                         <div id="validate_email" class="form-text">Email</div>
                     </div>
 
-                    <div class="col-12">
-                        <label for="password" class="form-label">Password<b style="color: red;">*</b></label>
-                        <input type="password" class="form-control" name="password" id="password">
+                    <div class="mb-2">
+                        <input type="password" class="input-text" name="password" id="password" placeholder="Password">
                         <div id="cantidad" class="form-text">Debe contener minimo 8 digitos</div>
                         <div id="caracteres" class="form-text">Almenos una mayuscula, un numero y un caracter especial</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 col-6 mx-auto mb-3">
+                        <button type="submit" class="boton boton-animation" >Sign up</button>
                     </div>
 
                     {% if alerta == True %}
@@ -61,22 +69,7 @@
                         {% endif %}
                     {% endwith %}
 
-                    <div class=" d-grid gap-2 col-6 mx-auto">
-                        <button type="submit" class="btn btn-success btn-lg">Registrarse</button>
-                    </div>
-
                 </form>
-
-                <div class="mb-3 text-center">
-                    <h2>o</h2>
-                </div>
-
-                <div class=" d-grid gap-2 col-6 mx-auto">
-                    <a href=" {{ url_for('login') }} " class="btn btn-primary btn-lg">Iniciar sesion</a>
-                </div>
-
-                <div class="mb-3"></div>
-
             </div>
         </div>
     </div>

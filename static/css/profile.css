@@ -1,11 +1,53 @@
-.name{
-    font-size: 15px;
+.page{
+    box-shadow: 0 0 5px 0 white inset, 0 0 5px 4px white;
 }
-.user{
-    font-size: 10px;
+.user-page{
+    min-height: auto;
+    background: white;
+    padding-bottom: 5px;
 }
-.total{
-    font-size: 12.5px;
+.title-page{
+    padding: 10px;
+    border-bottom: 1px solid black;
+}
+.body-page{
+    background: white;
+}
+@media (max-width: 576px){
+    .title-page{
+        border-top: 1px solid black;
+    }
+}
+.ver-min{
+    min-height: 89vh;
+}
+.text-container{
+    background: white;
+    padding-bottom: 2px;
+    padding-left: 2px;
+    width: 100%;
+    height: auto;
+    font-family: 'Times New Roman', Times, serif;
+}
+.text-info-container{
+    font-family: 'Times New Roman', Times, serif;
+    text-align: start;
+    font-size: 12px;
+    margin-top: 1rem;
+    font-weight: 700;
+}
+.text-user{
+    font-size: 18px;
+}
+.text-email{
+    font-size: 12px;
+}
+.circle-image{
+    background: black;
+    border: 2px solid black;
+    border-radius: 100%;
+    width: 100px;
+    height: 100px;
 }
 .contener-imagen{
     max-height: 170px;

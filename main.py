@@ -154,6 +154,9 @@ def recuperar_cuenta(urluser):
 @app.post("/recuperar-cuenta/<urluser>")
 def recuperar_cuentaPost(urluser):
     if urluser != "":
+        logeado = True
+        if not validations_controller.ControllerEstaIniciado():
+            logeado = False
         usuario = select_users.GetUrlPassword(url_pass = urluser)
         if not usuario:
             return render_template("errores/url_not_exist.html")
@@ -165,7 +168,7 @@ def recuperar_cuentaPost(urluser):
                 return render_template("users/form_new_password.html", urluser = urluser)
             
             form_password_controller.SendEmailFormPassword(usuario, password1, urluser)             
-            return render_template("index.html")
+            return render_template("index.html", logeado = logeado)
 
 #CREAR ARCHIVO
 @app.get("/crear-archivo")
@@ -288,5 +291,6 @@ def Share(url):
         if share['accesso'] == 'off':
             return render_template('errores/not_autorice_url.html',logeado = logeado)
     return render_template('archives/share.html',logeado = logeado, share = share, link = settings.URL_PAGE)
+
 
 app.run(debug=True)

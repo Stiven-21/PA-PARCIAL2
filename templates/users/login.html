@@ -1,33 +1,46 @@
 {% extends './base/base.html' %}
 
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/body.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
 {% block titulo %}
     LOGIN
 {% endblock %}
 
 {% block contenido %}
     <div class="container col-12 col-sm-9 col-md-6 col-lg-4">
-        <div class="row align-items-center justify-content-center">
+        <div class="row align-items-center justify-content-center mtop">
             <div class="col ">
-
                 <form action="{{ url_for('loginPost') }}" method="POST">
-                    <div class="mb-3 mt-3 text-center">
-                        <img src="{{ url_for('static', filename='images/user.png') }}" alt="img_usuario" width="110" height="110">
+                    <div class="mb-2 mt-1 text-center">
+                        <img src="{{ url_for('static', filename='images/user.png') }}" class="circle-image" alt="img_usuario" >
+                    </div>
+                    
+                    <div class="mb-2 text-end">
+                        <div class="text-info-user">
+                            Not registered? <a href="{{ url_for('register') }}" class="link-sin">Create an account</a>
+                        </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="user" class="form-label">Email address</label>
-                        <input type="email" class="form-control" name="user" id="user" value="{{ user }}" aria-describedby="emailHelp">
+                        <input type="email" class="input-text" placeholder="Email address" name="user" id="user" value="{{ user }}">
                     </div>
 
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" id="Password">
+                    <div class="mb-2">
+                        <input type="password" class="input-text" placeholder="Password" name="password" id="Password">
                         <div class="form-text">
                             <a href="/recuperar-cuenta" class="link-primary" style="text-decoration:none;">¿Olvidaste tu contraseña?</a>
                         </div>
                     </div>
 
-                    {% with messages = get_flashed_messages() %}
+                    <div class="d-grid gap-2 col-6 mx-auto mb-3">
+                        <button type="submit" class="boton boton-animation" >Sign in</button>
+                    </div>
+                </form>
+
+                {% with messages = get_flashed_messages() %}
                         {% if messages %}
                         <div class="alert alert-danger d-flex align-items-center" role="alert">
                             <div class="row">
@@ -38,22 +51,6 @@
                         </div>
                         {% endif %}
                     {% endwith %}
-
-                    <div class=" d-grid gap-2 col-6 mx-auto">
-                        <button type="submit" class="btn btn-success btn-lg">Iniciar sesion</button>
-                    </div>
-                  </form>
-
-                <div class="mb-3 text-center">
-                    <h2>o</h2>
-                </div>
-
-                <div class=" d-grid gap-2 col-6 mx-auto">
-                    <a href=" {{ url_for('register') }} " class="btn btn-primary btn-lg">Crear cuenta nueva</a>
-                </div>
-
-                <div class="mb-3"></div>
-
             </div>
         </div>
         
