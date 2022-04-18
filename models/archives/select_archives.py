@@ -15,9 +15,9 @@ def GetTotalArchivesUser(id_usuario):
     cursor.close()
     return total_archives
 
-def GetArchivesForIndex():
+def GetArchivesForIndex(search):
     cursor = db.cursor(dictionary = True)
-    cursor.execute('SELECT * FROM archivos WHERE accesso="on" ORDER BY id_archivo DESC')
+    cursor.execute('SELECT * FROM archivos WHERE nombre_archivo LIKE "%'+search+'%" AND accesso="on" ORDER BY id_archivo DESC')
     archives = cursor.fetchall()
     cursor.close()
     return archives

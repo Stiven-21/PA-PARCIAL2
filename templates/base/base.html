@@ -17,13 +17,12 @@
 <body>
     <header>
         <div class="menu">
-            <img src="{{ url_for('static', filename='images/inicio.png') }}" alt="" class="imagen-navbar">
+            <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/inicio.png') }}" alt="" class="imagen-navbar"></a>
             <nav>
                 <ul>
-                    <li><a href="{{ url_for('index') }}">Inicio</a></li>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
                     {% if logeado == False%}
-                        <li><a href="{{ url_for('register') }}">Registrarse</a></li>
-                        <li><a href="{{ url_for('login') }}">Iniciar sesion</a></li>
+                        <li><a href="{{ url_for('login') }}">Sign in</a></li>
                     {%endif%}
                     {%if logeado == True%}
                         <li><a href="{{ url_for('profile') }}">Perfil</a></li>

@@ -75,7 +75,7 @@
                     {% endwith %}
 
                     <div class=" d-grid gap-2 col-6 mx-auto">
-                        <button type="submit" id="funsubir" class="btn btn-success btn-lg">Actualizar</button>
+                        <button type="submit" id="funsubir" class="btn btn-success btn-lg btn-edit">Actualizar</button>
                     </div>
                   </form>
 
@@ -88,4 +88,5 @@
 {% block javascript %}
     <script src="{{ url_for('static', filename='js/image.js') }}"></script>
     <script src="{{ url_for('static', filename='js/carga.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/alert-edit.js') }}"></script>
 {% endblock %}

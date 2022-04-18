@@ -26,8 +26,20 @@ def index():
     logeado = True
     if not validations_controller.ControllerEstaIniciado():
         logeado = False
-    archives = archives_index_controller.ControllerArchiveIndex()
+    search = ""
+    archives = archives_index_controller.ControllerArchiveIndex(search)
     return render_template("index.html", logeado = logeado, archives = archives, link = settings.URL_PAGE)
+
+@app.post("/")
+def indexPost():
+    logeado = True
+    if not validations_controller.ControllerEstaIniciado():
+        logeado = False
+    search = request.form.get('search')
+    if search == "":
+        return redirect(url_for('index'))
+    archives = archives_index_controller.ControllerArchiveIndex(search)
+    return render_template("index.html", logeado = logeado, archives = archives, link = settings.URL_PAGE, search = search)
 
 @app.get("/logout")
 def logout():
@@ -305,4 +317,4 @@ def download(id):
     download = archive['ruta_archivo']
     return send_from_directory(settings.ROUTE_IMAGE, path=download, as_attachment = True)
 
-#app.run(debug=True)
+app.run(debug=True)
