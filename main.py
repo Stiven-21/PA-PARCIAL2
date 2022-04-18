@@ -7,6 +7,7 @@ from controllers.user import register_controller
 from controllers.user import activate_account_controller
 from controllers.user import recuperate_account_controller
 from controllers.user import form_password_controller
+from controllers.token_account import forward_token
 from controllers.functions import get_id_usuario_controller
 from controllers.archives import create_archive_controller
 from controllers.archives import delete_archive_controller
@@ -103,9 +104,27 @@ def registerPost():
         return render_template("users/register.html", name=name, user = user, last_name = last_name, logeado = logeado)
     
     register_controller.ControllerSendRegister(name, last_name, user, password)
+    id_new_user = forward_token.GetIdUserRegisterController(user)
     alerta = True
-    return render_template("users/register.html", alerta = alerta, logeado = logeado)
+    return render_template("users/register.html", alerta = alerta, logeado = logeado, id_new_user = id_new_user)
 
+#REENVIO DE TOKEN 
+@app.get("/register/<id>")
+def newToken(id):
+    logeado = True
+    if not validations_controller.ControllerEstaIniciado():
+        logeado = False
+    if logeado == True:
+        return redirect(url_for('profile'))
+    user = forward_token.GetUserNewToken(id)
+    if user == None:
+        return redirect(url_for('register'))
+    if user['validate'] == 'true':
+        return redirect(url_for('login'))
+    forward_token.NewTokenValidateAccountController(str(user['id_usuario']), str(user['user']), str(user['nombre_usuario']), str(user['apellido_usuario']))
+    alerta =  True
+    return render_template("users/register.html", alerta = alerta, logeado = logeado, id_new_user = str(user['id_usuario']))
+    
 #PERFIL DEL USUARIO
 @app.get("/profile")
 def profile():
@@ -166,9 +185,6 @@ def recuperar_cuenta(urluser):
 @app.post("/recuperar-cuenta/<urluser>")
 def recuperar_cuentaPost(urluser):
     if urluser != "":
-        logeado = True
-        if not validations_controller.ControllerEstaIniciado():
-            logeado = False
         usuario = select_users.GetUrlPassword(url_pass = urluser)
         if not usuario:
             return render_template("errores/url_not_exist.html")
@@ -180,7 +196,7 @@ def recuperar_cuentaPost(urluser):
                 return render_template("users/form_new_password.html", urluser = urluser)
             
             form_password_controller.SendEmailFormPassword(usuario, password1, urluser)             
-            return render_template("index.html", logeado = logeado)
+            return redirect(url_for('index'))
 
 #CREAR ARCHIVO
 @app.get("/crear-archivo")

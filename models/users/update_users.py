@@ -18,3 +18,8 @@ def SendPasswordRecuperate(url, password):
     cursor.close()
     return User
 
+def SendNewValidateAccount(id, validate, url_validate):
+    cursor = db.cursor()
+    cursor.execute('UPDATE usuarios SET validate = "'+validate+'", url_val_mail = "'+url_validate+'" WHERE id_usuario="'+id+'" ')
+    cursor.close()
+

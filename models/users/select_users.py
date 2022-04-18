@@ -10,7 +10,6 @@ def GetUserLogin(user, password):
 def GetUserUser(user):
     cursor = db.cursor(dictionary=True)
     cursor.execute('SELECT * FROM usuarios WHERE user="'+user+'"')
-
     usuario = cursor.fetchall()
     cursor.close()
     return usuario
@@ -32,6 +31,13 @@ def GetUrlPassword(url_pass):
     return usuario
 
 def GetProfileUser(id):
+    cursor = db.cursor(dictionary=True)
+    cursor.execute('SELECT * FROM usuarios WHERE id_usuario ="'+id+'" ')
+    usuario = cursor.fetchone()
+    cursor.close()
+    return usuario
+
+def GetUserForNewToken(id):
     cursor = db.cursor(dictionary=True)
     cursor.execute('SELECT * FROM usuarios WHERE id_usuario ="'+id+'" ')
     usuario = cursor.fetchone()
