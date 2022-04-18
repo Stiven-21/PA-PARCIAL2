@@ -326,11 +326,20 @@ def download(id):
     logeado = True
     if not validations_controller.ControllerEstaIniciado():
         logeado = False
-    if not delete_archive_controller.ControllerValidateArchiveDelete(id, str(session.get('id_usuario'))):
-        return render_template('errores/not_autorice_delete.html',logeado = logeado)
-    
+        
     archive = get_archive_download.GetArchiveDownload(id)
-    download = archive['ruta_archivo']
-    return send_from_directory(settings.ROUTE_IMAGE, path=download, as_attachment = True)
+    if logeado == False:
+        if archive['accesso'] == 'on':
+            return send_from_directory(settings.ROUTE_IMAGE, path=archive['ruta_archivo'], as_attachment = True)
+        else:
+            return render_template('errores/not_autorice_delete.html',logeado = logeado)
+    else:
+        if delete_archive_controller.ControllerValidateArchiveDelete(id, str(session.get('id_usuario'))) != True :
+            if archive['accesso'] == 'on':
+                return send_from_directory(settings.ROUTE_IMAGE, path=archive['ruta_archivo'], as_attachment = True)
+            else:
+                return render_template('errores/not_autorice_delete.html',logeado = logeado)
+
+    return send_from_directory(settings.ROUTE_IMAGE, path=archive['ruta_archivo'], as_attachment = True)
 
 app.run(debug=True)

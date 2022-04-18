@@ -36,7 +36,6 @@
                                 <div>Peso: {{ archivo['size'] }}</div>
                                 <div>Tipo: .{{ archivo['type'] }}</div>
                             </p>
-                            <div class="text-copy mb-1" id="text-copy">{{ link+"/archive/"+archivo['url_share'] }}</div>
                             <div class="d-flex justify-content-evenly">
                                 <div>
                                     <a href="/archive/{{ archivo['url_share'] }}" class="btn btn-success btn-sm">
@@ -74,5 +73,4 @@
 
 {% block javascript %}
     <script src="{{ url_for('static', filename='js/carga.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/download.js') }}"></script>
 {% endblock %}

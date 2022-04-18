@@ -94,7 +94,6 @@ def ControllerVistaArchive(ruta_save):
     ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"no-image.jpg"
 
     if type in ['html','htm']:
-        print("ES UN HTML")
         ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"html.jpg"
     if type == 'css':
         ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"css.png"
