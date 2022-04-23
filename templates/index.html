@@ -1,10 +1,9 @@
 {% extends 'base/base.html' %}
 
 {% block estilos %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/carga.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/text-copy.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/body.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cartas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
 {% endblock %}
 
 {% block titulo %}
@@ -12,18 +11,8 @@
 {% endblock %}
 
 {% block contenido %}
-    <div id="contenedor_carga">
-        <div id="carga"></div>
-    </div>
     <div class="container col-12 col-md-10 col-xl-9">
-        <div class="row search">
-            <div class="col-12">
-                <div class="search-container">
-                    <form action="{{ url_for('indexPost') }}" method="POST">
-                        <input type="search" placeholder="Search archive" value="{{ search }}" name="search" id="search" class="input-search">
-                    </form>
-                </div>
-            </div>
+        <div class="row row-spacing">
             {% for archivo in archives %}
                 <div class="col-6 col-sm-4 col-lg-3 mb-3 col-card">
                     <div class="card shadow-sm">
@@ -38,12 +27,12 @@
                             </p>
                             <div class="d-flex justify-content-evenly">
                                 <div>
-                                    <a href="/archive/{{ archivo['url_share'] }}" class="btn btn-success btn-sm">
+                                    <a href="/file/preview/{{ archivo['url_share'] }}" class="btn btn-success btn-sm">
                                         <ion-icon name="eye-outline"></ion-icon>
                                     </a>
                                 </div>
                                 <div>
-                                    <a href="/download/{{ archivo['id_archivo'] }}" class="btn btn-primary btn-sm">
+                                    <a href="/file/download/{{ archivo['id_archivo'] }}" class="btn btn-primary btn-sm">
                                         <ion-icon name="arrow-down-outline"></ion-icon>
                                     </a>
                                 </div>
@@ -55,22 +44,18 @@
         </div>
     </div>
 
-    <div class="footer bg-light border-top">
+    <div class="footer bg-black border-top">
         <div class="container">
             <div class="row mb-2 mt-2">
                 <div class="col offset-lg-1 text-start">
                   <img src="https://sigedin.itp.edu.co/sigeitp/sigedin_excel/imagenes/Logo_ITP%20(1).png" alt="ITP" width="110" height="110">
                 </div>
                 <div class="col offset-lg-1 text-end">
-                    <p class="fs-4 text-dark">Desarrolladores</p>
+                    <p class="fs-4 text-white">Desarrolladores</p>
                     <p class="h6 text-secondary">Cordoba Botina James Estiven</p>
                     <p class="h6 text-secondary">Miranda Barragan Darien Manuel</p>
                 </div>
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block javascript %}
-    <script src="{{ url_for('static', filename='js/carga.js') }}"></script>
 {% endblock %}

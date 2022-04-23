@@ -1,0 +1,98 @@
+{% extends './base/base.html' %}
+
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/body.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cartas.css') }}">
+{% endblock %}
+{% block titulo %}
+    MY PROFILE
+{% endblock %}
+
+{% block contenido %}
+    <div class="container col-12 col-md-10 col-xl-9">
+        <div class="row row-spacing">
+            <div class="col-12 col-md-3 user-page">
+                <div class="row align-items-center">
+                    <div class="col-6 col-md-12">
+                        <div class="text-center mb-3 mt-3">
+                            <img src="{{ url_for('static', filename='images/user.png') }}" class="circle-image" alt="img_usuario">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="text-start mb-3 mt-3">
+                            <div class="text-info-container">Usuario:</div>
+                            <div class="text-container text-user"> {{ user['nombre_usuario'] }} {{ user['apellido_usuario'] }} </div>
+                            
+                            <div class="text-info-container">Email:</div>
+                            <div class="text-container text-email"> {{ user['user'] }} </div>
+                            
+                            <div class="text-info-container">Archivos subidos:</div>
+                            <div class="text-container text-user"> {{ total_archives['COUNT(*)'] }} </div>
+                        </div>
+                        <div class="text-center">
+                            <a href="{{ url_for('logout') }}" class="btn btn-danger">Sign off</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col body-page">
+                <div class="row title-page align-item-center">
+                    <div class="col-8 col-sm-10 text-center title-archives">MIS ARCHIVOS</div>
+                    <div class="col-4 col-sm-2 text-end">
+                        <a href="{{ url_for('CreateFile') }}" class="btn btn-primary">Nuevo</a>
+                    </div>
+                </div>
+                {% if total_archives['COUNT(*)'] == 0 %}
+                    <div class="alert alert-secondary text-center mt-3" role="alert">
+                        Hasta el momento no ha realizado registrado ningun archivo!
+                    </div>
+                {%endif%}
+                {%if total_archives['COUNT(*)'] !=0 %}
+                    <div class="row mt-3">
+                        {% for archivo in archives %}
+                            <div class="col-6 col-md-4 col-xl-3 mb-3 col-card">
+                                <div class="card shadow-sm">
+                                    <div class="contener-imagen">
+                                        <img src="{{ archivo['ruta_vista'] }}" class="card-img-top imagen rounded" alt="...">
+                                    </div>
+                                    <div class="card-body ">
+                                        <h5 class="card-title">{{ archivo['nombre_archivo'] }}</h5>
+                                        <p class="card-text">
+                                            <div>Peso: {{ archivo['size'] }}</div>
+                                            <div>Tipo: .{{ archivo['type'] }}</div>
+                                            <div>Acceso: {% if archivo['accesso'] == 'on' %}Publico {% endif %}{% if archivo['accesso'] == 'off' %}Privado {% endif %}</div>
+                                        </p>
+                                        <div class="d-flex justify-content-evenly align-items-end">
+                                            <div>
+                                                <a href="/file/preview/{{ archivo['url_share'] }}" class="btn btn-success btn-sm">
+                                                    <ion-icon name="eye-outline"></ion-icon>
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <a href="/file/edit-file/{{ archivo['id_archivo'] }}" class="btn btn-primary btn-sm">
+                                                    <ion-icon name="create-outline"></ion-icon>
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <a href="/file/delete-file/{{ archivo['id_archivo'] }}" class="btn btn-danger btn-sm btn-delete">
+                                                    <ion-icon name="trash-outline"></ion-icon>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='js/alert-delete.js') }}"></script>
+{% endblock %}

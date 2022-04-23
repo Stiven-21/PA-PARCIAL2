@@ -1,0 +1,22 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.imagen-navbar{
+    height: 33px;
+}
+.row-spacing{
+    margin-top: 70px;
+}
+.imagen{
+    min-width: auto;
+    min-height: 170px;
+    max-width: auto;
+    max-height: 170px;
+}
+.contener-imagen img{
+    width: 98%;
+    height:98%;
+    margin: auto;
+    display: block;
+}

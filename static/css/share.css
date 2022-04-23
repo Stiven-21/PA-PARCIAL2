@@ -1,3 +1,6 @@
+.page{
+    background: white;
+}
 .contener-imagen{
     max-height: 25rem;
     text-align: center;
@@ -22,6 +25,12 @@
     margin-bottom: 1rem;
     font-size: 30px;
     font-family: 'Times New Roman', Times, serif;
+    border-bottom: 1px solid black;
+}
+@media (max-width: 800px){
+    .title{
+        font-size: 20px;
+    }
 }
 .body-title{
     margin-top: 1rem;

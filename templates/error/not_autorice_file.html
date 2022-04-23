@@ -1,0 +1,23 @@
+{% extends 'base/base.html' %}
+
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/body.css') }}">
+{% endblock %}
+
+{% block titulo %}
+    NO AUTORICE
+{% endblock %}
+
+{% block contenido %}
+    <div class="container col-12 col-md-10 col-xl-9">
+        <div class="row row-spacing">
+            <div class="alert alert-secondary text-center mt-3" role="alert">
+                Usuario no autorizado para realizar la accion!
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends './base/base.html' %}
+
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/body.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/share.css') }}">
+{% endblock %}
+
+{% block titulo %}
+    Share
+{% endblock %}
+
+{% block contenido %}
+    <div class="container col-12 col-sm-12 col-md-10 col-lg-10 col-xl-8">
+        <div class="row row-spacing ">
+            <div class="col-12 col-sm-4 page">
+                <div class="contener-imagen">
+                    <img src="{{ url_for('static', filename='images/types/no-image.jpg') }}" class="card-img-top imagen rounded" alt="...">
+                </div>
+            </div>
+            <div class="col page">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="title"> ARCHIVO NO DISPONIBLE </div> 
+                    </div>
+                    <div class="body-title">
+                        <div>Es posible que el archivo haya sido eliminado o no exista!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    
+{% endblock %}

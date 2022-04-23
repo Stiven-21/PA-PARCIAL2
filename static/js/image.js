@@ -57,6 +57,7 @@ document.getElementById('file').onchange = function(e){
         case 'bmp':
         case 'psd':
         case 'raw':
+        case 'gif':
             reader = new FileReader();
             reader.readAsDataURL(e.target.files[0]);
             reader.onload = function(){
@@ -75,7 +76,6 @@ document.getElementById('file').onchange = function(e){
         case 'avi':
         case 'avchd':
         case 'mkv':
-        case 'gif':
             document.getElementById('vista_previa').src = "/static/images/types/mp4.png"
             break;
         case 'exe':

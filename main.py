@@ -1,345 +1,232 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory
-from config import settings
-from models.users import select_users
 
-from controllers.user import login_controller
-from controllers.user import register_controller
-from controllers.user import activate_account_controller
-from controllers.user import recuperate_account_controller
-from controllers.user import form_password_controller
-from controllers.token_account import forward_token
-from controllers.functions import get_id_usuario_controller
-from controllers.archives import create_archive_controller
-from controllers.archives import delete_archive_controller
-from controllers.archives import edit_archive_controller
-from controllers.archives import get_archive_download
-from controllers.share import share_archive_controller
+from controllers.logged_in import logged_in_controller
+from controllers.consult_database import get_archives_controllers
+from controllers.consult_database import get_users_controller
 from controllers.validations import validations_controller
-from controllers.profile import get_profile_user_controller
-from controllers.profile import get_profile_archives_controller
-from controllers.index import archives_index_controller
+from controllers.sign_in import sign_in_controller
+from controllers.sign_up import sign_up_controller
+from controllers.account import forward_token_controller
+from controllers.account import activate_account_controller
+from controllers.account import recover_account_controller
+from controllers.account import form_password_controller
+from controllers.file import create_file_controller
+from controllers.file import edit_file_controller
+from controllers.file import delete_file_controller
+from controllers.file import preview_file_controller
+from controllers.file import download_file_controller
+from config import settings
+
 
 app = Flask(__name__)
 app.secret_key = 'fjifjidfjied5df45df485h48@'
 
-@app.get("/")
+#INDEX
+@app.route("/", methods =['POST','GET'])
 def index():
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        logeado = False
+    logeado = logged_in_controller.ControllerLoggedIn()
     search = ""
-    archives = archives_index_controller.ControllerArchiveIndex(search)
-    return render_template("index.html", logeado = logeado, archives = archives, link = settings.URL_PAGE)
-
-@app.post("/")
-def indexPost():
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        logeado = False
-    search = request.form.get('search')
-    if search == "":
+    if request.method ==  'POST':
+        search = request.form.get('search')
+        if search == '':
+            return redirect(url_for('index'))
+        archives = get_archives_controllers.GetArchivesIndex(search)
+        return render_template("index.html",logeado = logeado, archives = archives)
+    else:
+        archives = get_archives_controllers.GetArchivesIndex(search)
+        return render_template("index.html",logeado = logeado, archives = archives)
+    
+#LOGIN -- SIGN IN
+@app.route("/login", methods =['POST','GET'])
+def login():
+    logeado = logged_in_controller.ControllerLoggedIn()
+    if logeado == True:
+        return redirect(url_for('profile'))
+    
+    if request.method ==  'POST':
+        user = request.form.get('user')
+        password = request.form.get('password')
+        if not sign_in_controller.ControllerLogin(user, password):
+            return render_template("sign_in/sign_in.html",logeado = logeado, user = user)
         return redirect(url_for('index'))
-    archives = archives_index_controller.ControllerArchiveIndex(search)
-    return render_template("index.html", logeado = logeado, archives = archives, link = settings.URL_PAGE, search = search)
-
+    else:
+        return render_template("sign_in/sign_in.html",logeado = logeado)
+    
+#LOGOUT
 @app.get("/logout")
 def logout():
     session.clear()
     return redirect(url_for('index'))
 
-#LOGIN
-@app.get("/login")
-def login():
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        logeado = False
-    if logeado == True:
-        return redirect(url_for('profile'))
-        
-    return render_template("users/login.html",logeado = logeado)
- 
-@app.post("/login")
-def loginPost():
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        logeado = False
-    if logeado == True:
-        return redirect(url_for('profile'))
-    
-    user = request.form.get('user')
-    password = request.form.get('password')
-    
-    if not login_controller.ControllerLogin(user, password):
-        return render_template("users/login.html", user = user, logeado = logeado)
-    
-    id = get_id_usuario_controller.GetIdUser(user, password)
-    session['id_usuario'] = id
-
-    return redirect(url_for('index'))
-
-#REGISTRER
-@app.get("/register")
+#REGISTER -- SIGN UP
+@app.route("/register", methods =['POST','GET'])
 def register():
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        logeado = False
+    logeado = logged_in_controller.ControllerLoggedIn()
     if logeado == True:
         return redirect(url_for('profile'))
-    return render_template("users/register.html",logeado = logeado)
-
-@app.post("/register")
-def registerPost():
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        logeado = False
-    if logeado == True:
-        return redirect(url_for('profile'))
-    name = request.form.get('name')
-    last_name = request.form.get('last_name')
-    user = request.form.get('user')
-    password = request.form.get('password')
-    alerta = False
     
-    if not register_controller.ControllerRegister(name, user, password):
-        return render_template("users/register.html", name=name, user = user, last_name = last_name, logeado = logeado)
-    
-    register_controller.ControllerSendRegister(name, last_name, user, password)
-    id_new_user = forward_token.GetIdUserRegisterController(user)
-    alerta = True
-    return render_template("users/register.html", alerta = alerta, logeado = logeado, id_new_user = id_new_user)
-
-#REENVIO DE TOKEN 
+    if request.method ==  'POST':
+        name = request.form.get('name')
+        last_name = request.form.get('last_name')
+        user = request.form.get('user')
+        password = request.form.get('password')
+        if not sign_up_controller.ControllerRegister(name, last_name, user, password):
+            return render_template("sign_up/sign_up.html",logeado = logeado, name = name, last_name = last_name, user = user)
+        id_new_user = get_users_controller.GetIdUserRegisterController(user)
+        return render_template("sign_up/sign_up.html", logeado = logeado, alerta = True, id_new_user = id_new_user)
+    else:
+        return render_template("sign_up/sign_up.html",logeado = logeado)        
+        
+#RESSEND OF TOKEN
 @app.get("/register/<id>")
 def newToken(id):
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        logeado = False
+    logeado = logged_in_controller.ControllerLoggedIn()
     if logeado == True:
         return redirect(url_for('profile'))
-    user = forward_token.GetUserNewToken(id)
+    user = get_users_controller.GetUserNewToken(id)
     if user == None:
         return redirect(url_for('register'))
     if user['validate'] == 'true':
         return redirect(url_for('login'))
-    forward_token.NewTokenValidateAccountController(str(user['id_usuario']), str(user['user']), str(user['nombre_usuario']), str(user['apellido_usuario']))
-    alerta =  True
-    return render_template("users/register.html", alerta = alerta, logeado = logeado, id_new_user = str(user['id_usuario']))
-    
-#PERFIL DEL USUARIO
-@app.get("/profile")
-def profile():
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        return redirect(url_for('login'))
-    user = get_profile_user_controller.GetProfileUserController(str(session.get('id_usuario')))
-    archives = get_profile_archives_controller.GetProfileArchivesController(str(session.get('id_usuario')))
-    total_archives = get_profile_archives_controller.GetCantidadArchivesProfileController(str(session.get('id_usuario')))
-    return render_template("profile/perfil.html",logeado = logeado, user = user, archives = archives, total_archives = total_archives, link = settings.URL_PAGE)
+    forward_token_controller.NewTokenValidateAccountController(str(user['id_usuario']), str(user['user']), str(user['nombre_usuario']), str(user['apellido_usuario']))
+    return render_template("sign_up/sign_up.html", logeado = logeado, alerta = True, id_new_user = str(user['id_usuario']))
 
 #ACTIVATE ACCOUNT
 @app.get("/validar-cuenta/<urluser>/<token>")
-def validar_cuenta(urluser, token):
-    usuario = select_users.GetUserValidate(validate = token, url_validate=urluser)
-    if not usuario:
-        return render_template("errores/url_not_exist.html")
+def validateAccount(urluser, token):
+    if not get_users_controller.GetUserWithValidateAndUrl(token, urluser):
+        return render_template("error/url_not_exist.html")
     else:
         activate_account_controller.ActivateAccount(token, urluser)
-        return render_template("validate/account_activate.html")
+        return render_template("validations/account_activate.html")
 
-#RECUPERAR CUENTA
-@app.get("/recuperar-cuenta")
-def recuperar():
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        logeado = False
+#RECOVER OF ACCOUNT
+@app.route("/recover-account", methods =['POST','GET'])
+def recover():
+    logeado = logged_in_controller.ControllerLoggedIn()
     if logeado == True:
         return redirect(url_for('profile'))
-    return render_template("users/recuperate_account.html", logeado = logeado)
-
-@app.post("/recuperar-cuenta")
-def recuperarPost():
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        logeado = False
-    if logeado == True:
-        return redirect(url_for('profile'))
-    user = request.form.get('user')
-    alerta = False
     
-    if not recuperate_account_controller.RecuperateAccount(user):
-        return render_template("users/recuperate_account.html", user = user, logeado = logeado)
-    
-    recuperate_account_controller.SendEmailRecuperateAccount(user)
-    alerta = True
-    return render_template("users/recuperate_account.html", alerta = alerta, logeado = logeado)
-
-@app.get("/recuperar-cuenta/<urluser>")
-def recuperar_cuenta(urluser):
-    if urluser != "":
-        usuario = select_users.GetUrlPassword(url_pass = urluser)
-        if not usuario:
-            return render_template("errores/url_not_exist.html")
-        else:
-            return render_template("users/form_new_password.html", urluser = urluser)
-
-@app.post("/recuperar-cuenta/<urluser>")
-def recuperar_cuentaPost(urluser):
-    if urluser != "":
-        usuario = select_users.GetUrlPassword(url_pass = urluser)
-        if not usuario:
-            return render_template("errores/url_not_exist.html")
-        else:
-            password1 = request.form.get('password1')
-            password2 = request.form.get('password2')
-
-            if not form_password_controller.FormPassword(password1, password2):
-                return render_template("users/form_new_password.html", urluser = urluser)
-            
-            form_password_controller.SendEmailFormPassword(usuario, password1, urluser)             
-            return redirect(url_for('index'))
-
-#CREAR ARCHIVO
-@app.get("/crear-archivo")
-def CreateArchive():
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        return redirect(url_for('login'))
-    access = 'off'
-    return render_template("archives/crear_archivo.html", logeado = logeado, access = access)
-
-@app.post("/crear-archivo")
-def CreateArchivePost():
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        return redirect(url_for('login'))
-    name_archive = request.form.get("name_archivo")
-    archivo = request.files['file']
-    access_archive = request.form.get("access")
-    
-    if not create_archive_controller.ControllerCreateArchive(name_archive, archivo, access_archive):
-        access = validations_controller.ControllerAccess(access_archive)
-        return render_template("archives/crear_archivo.html", name_archivo = name_archive, logeado = logeado, access = access)
-    
-    create_archive_controller.ControllerSendArchive(name_archive, str(session.get('id_usuario')), archivo, access_archive)
-    return redirect(url_for('profile'))
-
-#EDITAR ARCHIVO
-@app.get("/archivo/editar/<id>")
-def EditArchive(id):
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        return redirect(url_for('login'))
-    
-    id_usuario = str(session.get('id_usuario'))
-    if not delete_archive_controller.ControllerValidateArchiveDelete(id, id_usuario):
-        return render_template('errores/not_autorice_delete.html',logeado = logeado)
-    edit = edit_archive_controller.ControllerArchiveEdit(id, id_usuario)
-    
-    name_archivo = edit['nombre_archivo']
-    ruta = edit['ruta_vista']
-    ruta = ruta.split(".")
-    img = ruta[1]+"."+ruta[2]
-    ruta = edit['ruta_archivo']
-    ruta = ruta.split("/")
-    name_select = ruta[-1]
-    peso = edit['size']
-    access = edit['accesso']
-    
-    return render_template("archives/editar_archivo.html", logeado = logeado, name_archivo = name_archivo, img = img, name_select = name_select, peso = peso, access = access)
-
-@app.post("/archivo/editar/<id>")
-def EditArchivePost(id):
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        return redirect(url_for('login'))
-    id_usuario = str(session.get('id_usuario'))
-    if not delete_archive_controller.ControllerValidateArchiveDelete(id, id_usuario):
-        return render_template('errores/not_autorice_delete.html',logeado = logeado)
-    name_archive = request.form.get("name_archivo")
-    archivo = request.files['file']
-    access_archive = request.form.get("access")
-    
-    edit = edit_archive_controller.ControllerArchiveEdit(id, id_usuario)
-    if(archivo.filename == ""):
-        ruta = edit['ruta_vista']
-        ruta = ruta.split(".")
-        img = ruta[1]+"."+ruta[2]
-        ruta = edit['ruta_archivo']
-        ruta = ruta.split("/")
-        name_select = ruta[-1]
-        peso = edit['size']
+    if request.method ==  'POST':
+        user = request.form.get('user')
+        if not recover_account_controller.RecoverAccount(user):
+            return render_template("recover_account/recover_account.html", logeado = logeado, user = user)
+        return render_template("recover_account/recover_account.html", logeado = logeado, alerta = True)
     else:
-        flash('Si presiona a guardar sin seleccionar un archivo, se conservara el archivo anterior a la editacion')
-        img = "/static/images/types/no-image.jpg"
-        name_select = 'no definido'
-        peso = 'no definido'
+        return render_template("recover_account/recover_account.html", logeado = logeado)
+
+#PASSWORDS FORM
+@app.route("/recover-account/<url>", methods =['POST','GET'])
+def recoverAccount(url):
+    if not get_users_controller.GetUserWithUrlpassword(url):
+        return render_template("error/url_not_exist.html")
     
-    if not validations_controller.ControllerValidateEmpty(name_archive):
-        flash("No se permite el campo nombre vacio")
-        access = validations_controller.ControllerAccess(access_archive)
-        return render_template("archives/editar_archivo.html", logeado = logeado, name_archivo = name_archive, img = img, name_select = name_select, peso = peso, access = access)
-    if(archivo.filename == ""):
-        access = validations_controller.ControllerAccess(access_archive)
-        if access != edit['accesso']:
-            edit_archive_controller.ControllerEditAccessArchiveEdit(access, id)
-        edit_archive_controller.ControllerEditNameArchiveEdit(name_archive, id)
+    if request.method ==  'POST':
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+        if not form_password_controller.FormPassword(password1, password2, url):
+            return render_template("recover_account/form_new_password.html", urluser = url)
+        return redirect(url_for('index'))
     else:
-        delete_archive = edit['ruta_archivo']
-        access = validations_controller.ControllerAccess(access_archive)
-        edit_archive_controller.ControllerEditAllArchiveEdit(name_archive, delete_archive, archivo, access, id)
-    session.pop('_flashes', None)
-    return redirect(url_for('profile'))
+        return render_template("recover_account/form_new_password.html", urluser = url)
 
-#ELIMINAR ARCHIVO
-@app.get("/archivo/borrar-archivo/<id>")
-def DeleteArchive(id):
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        return redirect(url_for('login'))
-    id_usuario = str(session.get('id_usuario'))
-    if not delete_archive_controller.ControllerValidateArchiveDelete(id, id_usuario):
-        return render_template('errores/not_autorice_delete.html',logeado = logeado)
-        
-    edit = edit_archive_controller.ControllerArchiveEdit(id, id_usuario)
-    delete_archive = edit['ruta_archivo']
-    delete_archive_controller.ControllerDeleteArchive(id, id_usuario, delete_archive)
-    return redirect(url_for('profile'))
-    
-#COMPARTIR
-@app.get("/archive/<url>")
-def Share(url):
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        logeado = False
-    share = share_archive_controller.ControllerShareArchive(url)
-    if share is None:
-        return render_template('errores/archive_not_exist.html',logeado = logeado)
-    
-    if share['id_usuario'] != session.get('id_usuario'): 
-        if share['accesso'] == 'off':
-            return render_template('errores/not_autorice_url.html',logeado = logeado)
-    return render_template('archives/share.html',logeado = logeado, share = share, link = settings.URL_PAGE)
-
-#Descargar
-@app.get("/download/<id>")
-def download(id):
-    logeado = True
-    if not validations_controller.ControllerEstaIniciado():
-        logeado = False
-        
-    archive = get_archive_download.GetArchiveDownload(id)
+#PROFILE
+@app.get("/profile")
+def profile():
+    logeado = logged_in_controller.ControllerLoggedIn()
     if logeado == False:
-        if archive['accesso'] == 'on':
-            return send_from_directory(settings.ROUTE_IMAGE, path=archive['ruta_archivo'], as_attachment = True)
-        else:
-            return render_template('errores/not_autorice_delete.html',logeado = logeado)
+        return redirect(url_for('register'))
+    user = get_users_controller.GetDateOfUserForProfile(str(session.get('id_usuario')))
+    archives = get_archives_controllers.GetAllArchivesOfUser(str(session.get('id_usuario')))
+    total_archives = get_archives_controllers.GetCountArchivesOfUser(str(session.get('id_usuario')))
+    return render_template("profile/profile.html",logeado = logeado, user = user, archives = archives, total_archives = total_archives)
+    
+#CREATE FILE
+@app.route("/create-file", methods =['POST','GET'])
+def CreateFile():
+    logeado = logged_in_controller.ControllerLoggedIn()
+    if logeado == False:
+        return redirect(url_for('login'))
+    
+    if request.method ==  'POST':
+        name_archive = request.form.get("name_archivo")
+        archivo = request.files['file']
+        access = validations_controller.ControllerAccess(request.form.get("access"))
+        if not create_file_controller.ControllerCreateArchive(name_archive, str(session.get('id_usuario')), archivo, access):
+            return render_template("file/create_file.html", logeado = logeado, access = access, name_archivo = name_archive)
+        return redirect(url_for('profile'))
     else:
-        if delete_archive_controller.ControllerValidateArchiveDelete(id, str(session.get('id_usuario'))) != True :
-            if archive['accesso'] == 'on':
-                return send_from_directory(settings.ROUTE_IMAGE, path=archive['ruta_archivo'], as_attachment = True)
-            else:
-                return render_template('errores/not_autorice_delete.html',logeado = logeado)
+        return render_template("file/create_file.html", logeado = logeado, access = 'off')
 
-    return send_from_directory(settings.ROUTE_IMAGE, path=archive['ruta_archivo'], as_attachment = True)
+#EDIT FILE
+@app.route("/file/edit-file/<id_file>", methods =['POST','GET'])
+def editFile(id_file):
+    logeado = logged_in_controller.ControllerLoggedIn()
+    if logeado == True:
+        if not get_archives_controllers.ControllerFileIsOfUser(id_file, str(session.get('id_usuario'))):
+            return render_template('error/not_autorice_file.html',logeado = logeado)
+        else:
+            edit = get_archives_controllers.ControllerArchiveEdit(id_file, str(session.get('id_usuario')))
+            name_archivo = edit['nombre_archivo']#NOMBRE ARCHIVO 
+            ruta = edit['ruta_vista']
+            ruta = ruta.split(".")
+            img = ruta[1]+"."+ruta[2]#IMAGEN
+            name_select = edit['ruta_archivo']#NOMBRE ARCHIVO EN EL SERVIDOR
+            tipo = edit['type']#TIPO ARCHIVO
+            access = edit['accesso']#ACCESO   
+    else:
+        return redirect(url_for('login'))
+    
+    if request.method ==  'POST':
+        name_archivo = request.form.get("name_archivo")
+        archivo = request.files['file']
+        access_archive = validations_controller.ControllerAccess(request.form.get("access"))
+        edit = get_archives_controllers.ControllerArchiveEdit(id_file, str(session.get('id_usuario')))
+        if validations_controller.ControllerValidateEmpty(archivo.filename) == True:
+            flash('Si presiona a guardar sin seleccionar un archivo, se conservara el archivo anterior a la editacion')
+            img = "/static/images/types/no-image.jpg"
+            name_select = 'no definido'
+            tipo = 'no definido'
+            
+        if not edit_file_controller.ControllerEditFile(name_archivo, archivo, id_file, access_archive, edit):
+            return render_template("file/edit_file.html", logeado = logeado, name_archivo = name_archivo, img = img, name_select = name_select, tipo = tipo, access = access_archive)
+        session.pop('_flashes', None)
+        return redirect(url_for('profile'))
+    else:
+        return render_template("file/edit_file.html",  logeado = logeado, name_archivo = name_archivo, img = img, name_select = name_select, tipo = tipo, access = access)
+
+#DELETE FILE
+@app.get("/file/delete-file/<id_file>")
+def deleteFile(id_file):
+    logeado = logged_in_controller.ControllerLoggedIn()
+    if logeado == False:
+        return redirect(url_for('login'))
+    if not delete_file_controller.ControllerDeleteFile(str(session.get('id_usuario')), id_file):
+        return render_template('error/not_autorice_file.html',logeado = logeado)
+    return redirect(url_for('login'))
+    
+#PREVIEW FILE
+@app.get("/file/preview/<url>")
+def PreviewFile(url):
+    logeado = logged_in_controller.ControllerLoggedIn()
+    preview = get_archives_controllers.ControllerPreviewFile(url)
+    if preview is None:
+        return render_template('error/file_not_exist.html',logeado = logeado)
+    if not preview_file_controller.ControllerPreviewFile(preview, str(session.get('id_usuario'))):
+        return render_template('error/not_autorice_url.html',logeado = logeado)
+    ruta = preview['ruta_vista']
+    ruta = ruta.split(".")
+    img = ruta[1]+"."+ruta[2]#IMAGEN
+    return render_template('file/preview_file.html',logeado = logeado, img = img, share = preview, link = settings.URL_PAGE)
+
+#DOWNLOAD FILE
+@app.get("/file/download/<id_file>")
+def download(id_file):
+    logeado = logged_in_controller.ControllerLoggedIn()
+    file = get_archives_controllers.GetArchiveDownload(id_file)
+    if not download_file_controller.ControllerDownload(logeado, str(session.get('id_usuario')), file, id_file):
+        return render_template('error/not_autorice_file.html',logeado = logeado)
+    return send_from_directory(settings.ROUTE_IMAGE, path=file['ruta_archivo'], as_attachment = True)
 
 app.run(debug=True)
+

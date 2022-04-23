@@ -1,7 +1,7 @@
 body{
-    background: #000000;
-    background: -webkit-linear-gradient(to bottom   , #434343, #000000);
-    background: linear-gradient(to bottom   , #434343, #000000); 
+    background: #0F2027;
+    background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027); 
+    background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027);
 }
 .circle-image{
     background: black;

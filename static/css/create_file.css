@@ -1,0 +1,60 @@
+.img-info{
+    height: 15px;
+    width: 15px;
+}
+.page{
+    background: white;
+}
+.text-newfile{
+    border-bottom: 2px solid black;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 25px;
+}
+.swith-create-file{
+    border-top: 2px solid black;
+}
+.form-create-file{
+    padding-top: 2px;
+    padding-bottom: 1px;
+    min-height: auto;
+}
+.input-text{
+    width: 100%;
+    background: #203A43;
+    border: none;
+    outline: none;
+    padding: 10px;
+    font-size: 13px;
+    color: white;
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
+    border: 1px solid black;
+    border-radius: 4px;
+    box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px 1px rgba(255,255,255,0.2);
+    -webkit-transition: box-shadow .5s ease;
+    -moz-transition: box-shadow .5s ease;
+	-o-transition: box-shadow .5s ease;
+	-ms-transition: box-shadow .5s ease;
+	transition: box-shadow .5s ease;
+}
+.input-text:focus{
+    box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2);
+}
+input[type="file"]{
+    display: none;
+}
+.label{
+    color: white; /*cambiar a negro*/
+    height: 40px;
+    width: 100%;
+    background-color: #203A43;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+.label i{
+    margin-right: 5px
+}

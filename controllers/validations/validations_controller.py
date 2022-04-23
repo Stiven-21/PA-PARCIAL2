@@ -4,26 +4,25 @@ from datetime import datetime
 from config import settings
 import re
 
-def ControllerValidateMail(correo):
-    expresion_regular = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"
-    return re.match(expresion_regular, correo) is not None
-
-def ControllerArchiveEmpty(archivo):
-    if archivo.filename == "":
-        flash("Debe selecionar un archivo")
-        return False   
-    return True
-
-def ControllerAccess(access):
-    if access is None:
-        return 'off'
-    return 'on'
-    
+#CONTROLADOR DE CAMPOS VACIOS
 def ControllerValidateEmpty(campo):
     if campo == "":
         return False
     return True
 
+#CONTROLADOR DE MAILS VALIDOS
+def ControllerValidateMail(correo):
+    expresion_regular = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"
+    return re.match(expresion_regular, correo) is not None
+
+#VALIDAR CONTRASEÑA DE MINIMO 8 CARACTERES
+def ControllerLengthField(campo):
+    if len(campo) < 8:
+        flash("La contraseña debe contener minimo 8 caracteres")
+        return False
+    return True
+
+#VALIDAR LOS CARACTERES DE LA CONTARSEÑA
 def ControllerValidateCaracteres(password):
     SpecialSym =['!','"','#','$','%','&',"'",'(',')','*','+',',','-','.','/',':',';','=','?','@','[',']','^','_','`','{','|','}','~']
     isValid = True
@@ -40,39 +39,19 @@ def ControllerValidateCaracteres(password):
         return False
     return True
 
+#VALIDAR QUE DOS CAMPOS SEAN IGUALES
 def ControllerFieldEquals(campo1, campo2):
     if campo1 != campo2:
-        flash("La contraseña debe contener minimo 8 caracteres")
         return False
     return True
 
-def ControllerLengthField(campo):
-    if len(campo) < 8:
-        flash("La contraseña debe contener minimo 8 caracteres")
-        return False
-    return True
+#RETORNAR EL TIPO DE ACCESO
+def ControllerAccess(access):
+    if access is None:
+        return 'off'
+    return 'on'
 
-def ControllerEstaIniciado():
-    return True if 'id_usuario' in session else False
-
-def ControllerExtractTypeArchive(archive):
-    name_archive = archive.filename
-    name_archive = name_archive.split(".")
-    
-    tipo = name_archive[-1]
-    return tipo
-
-def ControllerExtractPesoArchive(ruta):
-    peso = convert_bytes(os.stat(settings.ROUTE_IMAGE+ruta).st_size)
-    return peso
-
-def convert_bytes(num):
-    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
-        if num < 1024.0:
-            return "%3.1f %s" % (num, x)
-        num /= 1024.0
-
-
+#GUARDA EL NUEVO ARCHIVO Y ME RETORNA EL NUEVO NOMBRE
 def ControllerSaveArchive(name,archive):
     now = datetime.now()
     name_archive = archive.filename
@@ -88,6 +67,7 @@ def ControllerSaveArchive(name,archive):
     ruta_archivo =  new_name
     return ruta_archivo
 
+#RETORNA LA DIRECCION DE VISTA PREVIA
 def ControllerVistaArchive(ruta_save):
     ruta = ruta_save.split(".")
     type = ruta[-1].lower()
@@ -107,13 +87,31 @@ def ControllerVistaArchive(ruta_save):
         ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"excel.jpg"
     if type  in ['pptx', 'pptm', 'potx', 'potm', 'ppam', 'ppsx', 'ppsm', 'sldx', 'sldm', 'thmx']:
         ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"point.png"
-    if type  in ['jpg', 'png', 'tif', 'bmp', 'psd', 'raw']:
+    if type  in ['jpg', 'png', 'tif', 'bmp', 'psd', 'raw', 'gif']:
         ruta_vista = settings.ROUTE_IMAGE + ruta_save
     if type  in ['rar', 'zip']:
         ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"rar.jpg"
-    if type  in ['mp4', 'mov', 'wmv', 'avi', 'avchd', 'mkv', 'gif']:
+    if type  in ['mp4', 'mov', 'wmv', 'avi', 'avchd', 'mkv']:
         ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"mp4.png"
     if type == 'exe':
         ruta_vista = settings.ROUTE_IMAGE_DEFAULT+"ejecutable.png"
-    
     return ruta_vista
+
+#DEVOLVERA EL TIPO DE ARCHIVO SELECCIONADO
+def ControllerExtractTypeArchive(archive):
+    name_archive = archive.filename
+    name_archive = name_archive.split(".")
+    tipo = name_archive[-1]
+    return tipo
+
+#RETORNA EL PESO DEL ARCHIVO
+def ControllerExtractPesoArchive(ruta):
+    peso = convert_bytes(os.stat(settings.ROUTE_IMAGE+ruta).st_size)
+    return peso
+
+#CONVERTIR EN UNIDAD DE PESO
+def convert_bytes(num):
+    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+        if num < 1024.0:
+            return "%3.1f %s" % (num, x)
+        num /= 1024.0

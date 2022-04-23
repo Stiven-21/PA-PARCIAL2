@@ -1,0 +1,46 @@
+{% extends './base/base.html' %}
+
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/body.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/share.css') }}">
+{% endblock %}
+
+{% block titulo %}
+    PREVIEW
+{% endblock %}
+
+{% block contenido %}
+    <div class="container col-12 col-sm-12 col-md-10 col-lg-10 col-xl-8">
+        <div class="row row-spacing mb-3">
+            <div class="col-12 col-sm-4 page">
+                <div class="contener-imagen mb-3">
+                    <img src="{{ img }}" class="card-img-top imagen rounded" alt="...">
+                </div>
+            </div>
+            <div class="col page">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="title"> {{ share['nombre_archivo'] }} </div> 
+                    </div>
+                    <div class="body-title">
+                        <div>Peso: {{ share['size'] }}</div>
+                        <div>Extencion: .{{ share['type'] }}</div>
+                        <div class="text-url" id="text-copy">{{ link+"/file/preview/"+share['url_share'] }}</div>
+                    </div>
+                    <div class="btn-title">
+                        <a href="/file/download/{{ share['id_archivo'] }}" class="btn btn-primary btn-sm">
+                            <ion-icon name="arrow-down-outline"></ion-icon>
+                        </a>
+                        <button id="portapapeles" class="btn btn-secondary btn-sm">
+                            <ion-icon name="copy-outline"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='js/copiar-portapapeles.js') }}"></script>
+{% endblock %}
