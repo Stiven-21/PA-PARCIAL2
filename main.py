@@ -53,7 +53,7 @@ def login():
         return render_template("sign_in/sign_in.html",logeado = logeado)
     
 #LOGOUT
-@app.get("/logout")
+@app.route("/logout", methods =['POST','GET'])
 def logout():
     session.clear()
     return redirect(url_for('index'))
@@ -78,7 +78,7 @@ def register():
         return render_template("sign_up/sign_up.html",logeado = logeado)        
         
 #RESSEND OF TOKEN
-@app.get("/register/<id>")
+@app.route("/register/<id>", methods =['POST','GET'])
 def newToken(id):
     logeado = logged_in_controller.ControllerLoggedIn()
     if logeado == True:
@@ -92,7 +92,7 @@ def newToken(id):
     return render_template("sign_up/sign_up.html", logeado = logeado, alerta = True, id_new_user = str(user['id_usuario']))
 
 #ACTIVATE ACCOUNT
-@app.get("/validar-cuenta/<urluser>/<token>")
+@app.route("/validar-cuenta/<urluser>/<token>", methods =['POST','GET'])
 def validateAccount(urluser, token):
     if not get_users_controller.GetUserWithValidateAndUrl(token, urluser):
         return render_template("error/url_not_exist.html")
@@ -131,7 +131,7 @@ def recoverAccount(url):
         return render_template("recover_account/form_new_password.html", urluser = url)
 
 #PROFILE
-@app.get("/profile")
+@app.route("/profile", methods =['POST','GET'])
 def profile():
     logeado = logged_in_controller.ControllerLoggedIn()
     if logeado == False:
@@ -196,7 +196,7 @@ def editFile(id_file):
         return render_template("file/edit_file.html",  logeado = logeado, name_archivo = name_archivo, img = img, name_select = name_select, tipo = tipo, access = access)
 
 #DELETE FILE
-@app.get("/file/delete-file/<id_file>")
+@app.route("/file/delete-file/<id_file>", methods =['POST','GET'])
 def deleteFile(id_file):
     logeado = logged_in_controller.ControllerLoggedIn()
     if logeado == False:
@@ -206,7 +206,7 @@ def deleteFile(id_file):
     return redirect(url_for('login'))
     
 #PREVIEW FILE
-@app.get("/file/preview/<url>")
+@app.route("/file/preview/<url>", methods =['POST','GET'])
 def PreviewFile(url):
     logeado = logged_in_controller.ControllerLoggedIn()
     preview = get_archives_controllers.ControllerPreviewFile(url)
@@ -220,7 +220,7 @@ def PreviewFile(url):
     return render_template('file/preview_file.html',logeado = logeado, img = img, share = preview, link = settings.URL_PAGE)
 
 #DOWNLOAD FILE
-@app.get("/file/download/<id_file>")
+@app.route("/file/download/<id_file>", methods =['POST','GET'])
 def download(id_file):
     logeado = logged_in_controller.ControllerLoggedIn()
     file = get_archives_controllers.GetArchiveDownload(id_file)
