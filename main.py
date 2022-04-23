@@ -228,5 +228,5 @@ def download(id_file):
         return render_template('error/not_autorice_file.html',logeado = logeado)
     return send_from_directory(settings.ROUTE_IMAGE, path=file['ruta_archivo'], as_attachment = True)
 
-app.run(debug=True)
+#app.run(debug=True)
 
