@@ -224,6 +224,9 @@ def PreviewFile(url):
 def download(id_file):
     logeado = logged_in_controller.ControllerLoggedIn()
     file = get_archives_controllers.GetArchiveDownload(id_file)
+    print(file)
+    if file is None:
+        return render_template('error/file_not_exist.html',logeado = logeado)
     if not download_file_controller.ControllerDownload(logeado, str(session.get('id_usuario')), file, id_file):
         return render_template('error/not_autorice_file.html',logeado = logeado)
     return send_from_directory(settings.ROUTE_IMAGE, path=file['ruta_archivo'], as_attachment = True)
